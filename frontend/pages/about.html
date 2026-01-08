@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Job Workspace</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        @media(max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mission-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="../index.html"
+                    style="text-decoration:none; color:inherit; display:flex; gap:10px; align-items:center;">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Job Workspace</span>
+                </a>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link active">About</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 60px 20px;">
+        <div class="about-grid">
+            <div>
+                <h1 style="font-size: 2.5rem; margin-bottom: 20px; color: var(--dark-color);">Empowering the Informal
+                    Workforce</h1>
+                <p style="font-size: 1.1rem; color: #666; margin-bottom: 20px; line-height: 1.8;">
+                    Job Workspace is Sri Lanka's premier multilingual platform bridging the gap between skilled
+                    daily-wage workers and households or businesses needing their services.
+                </p>
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">
+                    We believe that everyone deserves fair access to work opportunities. By leveraging technology, we
+                    are formalizing the informal sector, providing dignity, security, and consistent income for workers.
+                </p>
+            </div>
+            <div>
+                <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                    alt="Construction Team"
+                    style="width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            <div class="mission-card">
+                <i class="fas fa-bullseye fa-2x" style="color: var(--primary-color); margin-bottom: 15px;"></i>
+                <h2>Our Mission</h2>
+                <p>To create a seamless, transparent, and secure ecosystem where skilled workers can easily find
+                    employment and job providers can hire with confidence.</p>
+            </div>
+            <div class="mission-card" style="border-top-color: var(--secondary-color);">
+                <i class="fas fa-eye fa-2x" style="color: var(--secondary-color); margin-bottom: 15px;"></i>
+                <h2>Our Vision</h2>
+                <p>To be the leading digital platform for informal employment in South Asia, fostering economic growth
+                    and improving the livelihoods of millions.</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 60px;">
+            <h2 style="text-align: center; margin-bottom: 40px;">What Sets Us Apart</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-language"></i>
+                    <h3>Trilingual Support</h3>
+                    <p>Accessible in Sinhala, Tamil, and English to ensure no one is left behind.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI Matching</h3>
+                    <p>Our smart algorithms consider location, skills, and ratings to find the perfect fit.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-comments"></i>
+                    <h3>Direct Communication</h3>
+                    <p>Built-in chat and notification systems keep everyone in the loop.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Job Workspace. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Basic Auth Check for Nav
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const navMenu = document.getElementById('navMenu');
+
+            if (token) {
+                // Remove existing Login/Signup if they were hardcoded, append Dashboard
+                // For simplicity in this static file, we just append Logout
+                const logoutLink = document.createElement('a');
+                logoutLink.href = '#';
+                logoutLink.className = 'nav-link';
+                logoutLink.style.color = '#EF4444';
+                logoutLink.innerHTML = 'Logout';
+                logoutLink.onclick = () => {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '../index.html';
+                };
+                navMenu.appendChild(logoutLink);
+            } else {
+                navMenu.innerHTML += `
+                    <a href="login.html" class="nav-link">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

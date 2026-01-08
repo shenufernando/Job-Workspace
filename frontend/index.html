@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Workspace - Connect with Skilled Professionals</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Homepage specific styles */
+        .hero {
+            background: linear-gradient(rgba(79, 70, 229, 0.9), rgba(124, 58, 237, 0.8)), url('https://images.unsplash.com/photo-1581578731117-104f2a8d23e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 0 100px;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            background: #EEF2FF;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.5rem;
+        }
+
+        .stats-section {
+            background: var(--dark-color);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-briefcase"></i>
+                <span>Job Workspace</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="pages/about.html" class="nav-link">About</a>
+                <a href="pages/services.html" class="nav-link">Services</a>
+                <a href="pages/contact.html" class="nav-link">Contact</a>
+
+                <div class="language-selector">
+                    <select id="languageSelect" onchange="changeLanguage()">
+                        <option value="en">English</option>
+                        <option value="si">සිංහල</option>
+                        <option value="ta">தமிழ்</option>
+                    </select>
+                </div>
+
+                <div id="authLinks" style="display: flex; gap: 15px; align-items: center;">
+                    <a href="pages/login.html" class="nav-link">Login</a>
+                    <a href="pages/signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 data-i18n="hero.title">The Easiest Way to Find Skilled Workers</h1>
+                <p data-i18n="hero.subtitle"
+                    style="font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Connect with reliable electricians, plumbers, masons, and more. Or find your next job opportunity
+                    today.
+                </p>
+                <div class="hero-buttons">
+                    <a href="pages/signup.html?role=provider" class="btn btn-primary btn-large"
+                        style="background: white; color: var(--primary-color);">
+                        <i class="fas fa-search"></i> Post a Job
+                    </a>
+                    <a href="pages/signup.html?role=worker" class="btn btn-secondary btn-large">
+                        <i class="fas fa-hammer"></i> Find Work
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="features-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                    <h3>1. Create Account</h3>
+                    <p>Sign up as a Worker or Job Provider in seconds.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+                    <h3>2. Post or Apply</h3>
+                    <p>Providers post jobs; Workers apply to matches.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-handshake"></i></div>
+                    <h3>3. Get it Done</h3>
+                    <p>Connect, complete the work, and pay securely.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-star"></i></div>
+                    <h3>4. Rate & Review</h3>
+                    <p>Leave feedback to build trust in the community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="features-grid">
+                <div>
+                    <div class="stat-number">500+</div>
+                    <p>Skilled Workers</p>
+                </div>
+                <div>
+                    <div class="stat-number">1,200+</div>
+                    <p>Jobs Completed</p>
+                </div>
+                <div>
+                    <div class="stat-number">4.8/5</div>
+                    <p>Average Rating</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" style="background: #f9fafb;">
+        <div class="container">
+            <h2 class="section-title" data-i18n="features.title">Why Choose Job Workspace?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3 data-i18n="features.workers.title">Verified Workers</h3>
+                    <p data-i18n="features.workers.desc">Access a pool of ID-verified and skilled professionals.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h3 data-i18n="features.ai.title">AI Smart Match</h3>
+                    <p data-i18n="features.ai.desc">Our AI algorithm matches jobs to the closest available experts.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3 data-i18n="features.secure.title">Secure Platform</h3>
+                    <p data-i18n="features.secure.desc">Your data and payments are protected with industry standards.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-briefcase"></i> Job Workspace</h3>
+                    <p data-i18n="footer.desc">Empowering Sri Lanka's informal workforce through technology.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.quick">Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="pages/about.html">About</a>
+                    <a href="pages/services.html">Services</a>
+                    <a href="pages/contact.html">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.contact">Contact</h4>
+                    <p><i class="fas fa-envelope"></i> info@jobworkspace.com</p>
+                    <p><i class="fas fa-phone"></i> +94 11 234 5678</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Job Workspace. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Check Auth State and Update Navbar
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            const authLinks = document.getElementById('authLinks');
+
+            if (token && userStr) {
+                const user = JSON.parse(userStr);
+                let dashboardLink = 'pages/worker-dashboard.html';
+                if (user.role === 'provider') dashboardLink = 'pages/provider-dashboard.html';
+                if (user.role === 'admin') dashboardLink = 'pages/admin-dashboard.html';
+
+                authLinks.innerHTML = `
+                    <a href="${dashboardLink}" class="btn btn-secondary">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="#" onclick="logoutUser()" class="nav-link" style="color: #EF4444;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                `;
+            }
+        });
+
+        function logoutUser() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.reload();
+        }
+    </script>
+</body>
+
+</html>

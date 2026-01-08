@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Dashboard - Job Workspace</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- Layout & Sidebar Styles --- */
+        body {
+            background-color: #F3F4F6;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: #1F2937;
+            color: #E5E7EB;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            border-bottom: 1px solid #374151;
+            gap: 10px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+            flex: 1;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #9CA3AF;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-link:hover {
+            background-color: #374151;
+            color: white;
+        }
+
+        .sidebar-link.active {
+            background-color: #374151;
+            color: white;
+            border-left-color: var(--primary-color);
+        }
+
+        .sidebar-link i {
+            width: 30px;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #374151;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+            width: calc(100% - 260px);
+        }
+
+        /* Header Area */
+        .top-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            color: #4B5563;
+            transition: 0.2s;
+        }
+
+        .notification-bell:hover {
+            background: #F3F4F6;
+            color: var(--primary-color);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #EF4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            border: 2px solid #F3F4F6;
+        }
+
+        /* Dashboard Overview */
+        .dashboard-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            color: #111827;
+            margin: 0;
+        }
+
+        .welcome-text p {
+            color: #6B7280;
+            margin: 5px 0 0;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: #111827;
+            margin: 0;
+        }
+
+        /* Job Cards */
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #4F46E5;
+            transition: transform 0.2s;
+        }
+
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-card.status-rejected {
+            border-left-color: #EF4444;
+            opacity: 0.8;
+        }
+
+        .job-card.status-accepted {
+            border-left-color: #10B981;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .job-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin: 0;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 20px;
+            color: #6B7280;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .job-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .job-desc {
+            color: #4B5563;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #F3F4F6;
+            padding-bottom: 20px;
+        }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Buttons & Badges */
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary-custom {
+            background-color: #4F46E5;
+            color: white;
+            box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-secondary-custom {
+            background-color: white;
+            color: #4F46E5;
+            border: 1px solid #4F46E5;
+        }
+
+        .btn-chat {
+            background-color: #10B981;
+            color: white;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-new {
+            background-color: #10B981;
+            color: white;
+            margin-left: 10px;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            vertical-align: middle;
+        }
+
+        .badge-pending {
+            background-color: #FEF3C7;
+            color: #D97706;
+        }
+
+        .badge-accepted {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-rejected {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* Form & Reviews */
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            max-width: 700px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Review specific */
+        .review-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #F59E0B;
+        }
+
+        .stars-display {
+            color: #F59E0B;
+            margin: 5px 0;
+        }
+
+        .star-empty {
+            color: #E5E7EB;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar-brand span,
+            .sidebar-link span,
+            .sidebar-footer span {
+                display: none;
+            }
+
+            .sidebar-brand,
+            .sidebar-link,
+            .sidebar-footer {
+                padding: 15px;
+                justify-content: center;
+            }
+
+            .sidebar-link i {
+                width: auto;
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-briefcase"></i>
+            <span>Job Workspace</span>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li><a href="#" onclick="showSection('jobs')" class="sidebar-link active" id="nav-jobs"><i
+                        class="fas fa-search"></i> <span>Find Jobs</span></a></li>
+            <li><a href="#" onclick="showSection('applications')" class="sidebar-link" id="nav-applications"><i
+                        class="fas fa-file-contract"></i> <span>Applications</span></a></li>
+            <li><a href="#" onclick="showSection('reviews')" class="sidebar-link" id="nav-reviews"><i
+                        class="fas fa-star"></i> <span>My Reviews</span></a></li>
+            <li><a href="#" onclick="showSection('profile')" class="sidebar-link" id="nav-profile"><i
+                        class="fas fa-user"></i> <span>My Profile</span></a></li>
+            <li><a href="#" onclick="showSection('notifications')" class="sidebar-link" id="nav-notifications"><i
+                        class="fas fa-bell"></i> <span>Notifications</span></a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="#" onclick="logout()" class="sidebar-link" style="color: #F87171; padding-left: 0;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="top-header">
+            <div class="notification-bell" onclick="showSection('notifications')">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
+            </div>
+
+            <div class="user-pill">
+                <i class="fas fa-hard-hat" style="color: #6B7280; font-size: 1.2rem;"></i>
+                <span style="font-weight: 500; color: #374151; font-size: 0.9rem;">Skilled Worker</span>
+                <span id="newWorkerBadge" class="badge badge-new" style="display:none;">NEW</span>
+            </div>
+        </div>
+
+        <div class="dashboard-top">
+            <div class="welcome-text">
+                <h1>Hello, Worker!</h1>
+                <p>Find your next job opportunity or manage your applications.</p>
+            </div>
+        </div>
+
+        <div id="dashboardContent">
+
+            <div id="jobsSection">
+                <div class="section-header">
+                    <h2>Available Jobs</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn btn-primary-custom" onclick="loadJobs()">All Jobs</button>
+                        <button class="action-btn btn-secondary-custom"
+                            onclick="loadRecommendedJobs()">Recommended</button>
+                    </div>
+                </div>
+                <div id="jobsList"></div>
+            </div>
+
+            <div id="applicationsSection" style="display: none;">
+                <div class="section-header">
+                    <h2>My Applications</h2>
+                </div>
+                <div id="applicationsList"></div>
+            </div>
+
+            <div id="reviewsSection" style="display: none;">
+                <div class="section-header">
+                    <h2>My Reviews & Ratings</h2>
+                </div>
+                <div id="reviewsList"></div>
+            </div>
+
+            <div id="profileSection" style="display: none;">
+                <div class="section-header">
+                    <h2>My Profile</h2>
+                </div>
+                <div class="form-card">
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="profileName" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="profileEmail" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="profilePhone" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Address (Auto-filled)</label>
+                            <textarea id="profileAddress" required class="form-control" rows="2"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Position / Skill</label>
+                                <input type="text" id="profilePosition" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Experience (Years)</label>
+                                <input type="number" id="profileExperience" class="form-control">
+                            </div>
+                        </div>
+                        <div style="text-align: right; margin-top: 20px;">
+                            <button type="submit" class="action-btn btn-primary-custom">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="notificationsSection" style="display: none;">
+                <div class="section-header">
+                    <h2>Notifications</h2>
+                    <button class="action-btn btn-secondary-custom" onclick="markAllAsRead()">
+                        <i class="fas fa-check-double"></i> Mark All Read
+                    </button>
+                </div>
+                <div class="card"
+                    style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div id="notificationsList"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const user = getCurrentUser();
+                if (!getAuthToken() || user.role !== 'worker') {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                loadProfileData();
+                loadJobs();
+                checkNotifications();
+            }, 50);
+        });
+
+        // --- Navigation ---
+        function showSection(section) {
+            ['jobsSection', 'applicationsSection', 'reviewsSection', 'profileSection', 'notificationsSection'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+
+            document.getElementById(section + 'Section').style.display = 'block';
+            document.getElementById('nav-' + section).classList.add('active');
+
+            if (section === 'jobs') loadJobs();
+            if (section === 'applications') loadApplications();
+            if (section === 'reviews') loadReviews();
+            if (section === 'profile') loadProfileData();
+            if (section === 'notifications') loadNotifications();
+        }
+
+        // --- JOBS ---
+        async function loadJobs() {
+            try {
+                const jobs = await apiRequest('/jobs');
+                displayJobs(jobs, 'jobsList');
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
+
+        async function loadRecommendedJobs() {
+            try {
+                const jobs = await apiRequest('/jobs/recommended');
+                displayJobs(jobs, 'jobsList');
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
+
+        async function loadApplications() {
+            try {
+                const jobs = await apiRequest('/jobs');
+                const apps = jobs.filter(j => j.has_applied);
+                displayJobs(apps, 'applicationsList', true);
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
+
+        function displayJobs(jobs, containerId, isAppView = false) {
+            const list = document.getElementById(containerId);
+            list.innerHTML = '';
+            if (jobs.length === 0) { list.innerHTML = '<div style="text-align:center; padding:50px; color:#666;">No items found.</div>'; return; }
+
+            jobs.forEach(job => {
+                const div = document.createElement('div');
+                div.className = `job-card status-${isAppView ? job.application_status : 'active'}`;
+
+                let btn = '';
+                let statusBadge = '';
+
+                if (job.has_applied) {
+                    if (job.application_status === 'accepted') {
+                        statusBadge = `<span class="badge badge-accepted">Accepted</span>`;
+                        btn = `<button class="action-btn btn-chat" onclick="openMessages(${job.id}, ${job.provider_id}, '${job.provider_name}')">
+                                <i class="fas fa-comments"></i> Message Provider
+                               </button>`;
+                    } else if (job.application_status === 'rejected') {
+                        statusBadge = `<span class="badge badge-rejected">Rejected</span>`;
+                        btn = `<span style="color:#EF4444; font-size:0.9rem;">Application Rejected</span>`;
+                    } else {
+                        statusBadge = `<span class="badge badge-pending">Pending</span>`;
+                        btn = `<span style="color:#D97706; font-size:0.9rem;">Waiting for approval...</span>`;
+                    }
+                } else {
+                    btn = `<button class="action-btn btn-primary-custom" onclick="applyForJob(${job.id})">Apply Now</button>`;
+                }
+
+                div.innerHTML = `
+                    <div class="job-header">
+                        <h3 class="job-title">${job.title}</h3>
+                        ${statusBadge}
+                    </div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-user-tie"></i> ${job.provider_name}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
+                        <span><i class="fas fa-dollar-sign"></i> ${formatCurrency(job.salary)}</span>
+                        <span><i class="fas fa-clock"></i> ${job.duration || 'N/A'}</span>
+                    </div>
+                    <div class="job-desc">${job.description}</div>
+                    <div class="job-footer">
+                        <span style="font-size:0.8rem; color:#9CA3AF;">Posted: ${formatDate(job.created_at).split(',')[0]}</span>
+                        ${btn}
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        async function applyForJob(id) {
+            try {
+                await apiRequest(`/jobs/${id}/apply`, { method: 'POST' });
+                showAlert('Application submitted successfully!', 'success');
+                const isAppView = document.getElementById('applicationsSection').style.display === 'block';
+                if (isAppView) loadApplications(); else loadJobs();
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
+
+        // --- REVIEWS ---
+        async function loadReviews() {
+            try {
+                const user = getCurrentUser();
+                const reviews = await apiRequest(`/reviews/worker/${user.id}`);
+                const list = document.getElementById('reviewsList');
+                if (reviews.length === 0) { list.innerHTML = '<div style="text-align:center; padding:50px; color:#666;">No reviews yet.</div>'; return; }
+
+                list.innerHTML = reviews.map(r => {
+                    const stars = Array(5).fill(0).map((_, i) => `<i class="fas fa-star ${i < r.rating ? '' : 'star-empty'}"></i>`).join('');
+                    return `
+                        <div class="review-card">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <h3 style="margin:0; font-size:1.1rem; color:#1F2937;">${r.job_title}</h3>
+                                <div class="stars-display">${stars}</div>
+                            </div>
+                            <p style="color:#4B5563; font-style:italic; margin-bottom:15px;">"${r.comment}"</p>
+                            <div style="font-size:0.85rem; color:#6B7280; border-top:1px solid #eee; padding-top:10px; display:flex; justify-content:space-between;">
+                                <span>From: <strong>${r.provider_name}</strong></span>
+                                <span>${formatDate(r.created_at)}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) { showAlert('Failed to load reviews', 'error'); }
+        }
+
+        // --- PROFILE ---
+        async function loadProfileData() {
+            try {
+                const profile = await apiRequest('/profile');
+                document.getElementById('profileName').value = profile.name || '';
+                document.getElementById('profileEmail').value = profile.email || '';
+                document.getElementById('profilePhone').value = profile.phone || '';
+                document.getElementById('profileAddress').value = profile.address || '';
+                document.getElementById('profilePosition').value = profile.position || '';
+                document.getElementById('profileExperience').value = profile.experience || 0;
+
+                const badge = document.getElementById('newWorkerBadge');
+                if (badge) badge.style.display = profile.is_new ? 'inline-block' : 'none';
+            } catch (error) { console.error(error); }
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiRequest('/profile', {
+                    method: 'PUT', body: JSON.stringify({
+                        name: document.getElementById('profileName').value,
+                        email: document.getElementById('profileEmail').value,
+                        phone: document.getElementById('profilePhone').value,
+                        address: document.getElementById('profileAddress').value,
+                        position: document.getElementById('profilePosition').value,
+                        experience: document.getElementById('profileExperience').value
+                    })
+                });
+                showAlert('Profile updated successfully', 'success');
+            } catch (error) { showAlert(error.message, 'error'); }
+        });
+
+        // --- NOTIFICATIONS ---
+        async function checkNotifications() {
+            try {
+                const res = await apiRequest('/notifications/unread');
+                const badge = document.getElementById('notificationCount');
+                badge.textContent = res.unread_count || 0;
+                badge.style.display = res.unread_count > 0 ? 'flex' : 'none';
+            } catch (e) { }
+        }
+
+        async function loadNotifications() {
+            try {
+                const notes = await apiRequest('/notifications');
+                const list = document.getElementById('notificationsList');
+                list.innerHTML = notes.length ? notes.map(n => `
+                    <div style="padding:15px; border-bottom:1px solid #eee; background:${n.is_read ? 'white' : '#F0F9FF'}; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:600; margin-bottom:5px; color:#1F2937;">${n.title}</div>
+                            <div style="color:#4B5563; font-size:0.9rem;">${n.message}</div>
+                            <div style="color:#9CA3AF; font-size:0.75rem; margin-top:5px;">${formatDate(n.created_at)}</div>
+                        </div>
+                        ${!n.is_read ? `<i class="fas fa-circle" style="color:#3B82F6; font-size:0.6rem;"></i>` : ''}
+                    </div>
+                `).join('') : '<p style="text-align:center; padding:20px; color:#666;">No notifications.</p>';
+            } catch (e) { }
+        }
+
+        // MISSING FUNCTION ADDED HERE
+        async function markAllAsRead() {
+            try {
+                await apiRequest('/notifications/read-all', { method: 'PUT' });
+                checkNotifications();
+                loadNotifications();
+            } catch (e) { console.error(e); }
+        }
+
+        function logout() {
+            removeAuthToken();
+            removeCurrentUser();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

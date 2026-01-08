@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - Job Workspace</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .service-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background-color: #EEF2FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: background-color 0.3s;
+        }
+
+        .feature-card:hover .service-icon-wrapper {
+            background-color: var(--primary-color);
+        }
+
+        .feature-card:hover .service-icon-wrapper i {
+            color: white;
+        }
+
+        .service-icon-wrapper i {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            transition: color 0.3s;
+        }
+
+        .role-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        @media(max-width: 768px) {
+            .role-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .role-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid;
+        }
+
+        .role-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .role-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4B5563;
+        }
+
+        .role-list i {
+            color: #10B981;
+            /* Green checkmark */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="../index.html"
+                    style="text-decoration:none; color:inherit; display:flex; gap:10px; align-items:center;">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Job Workspace</span>
+                </a>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="services.html" class="nav-link active">Services</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 60px 20px;">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h1 style="font-size: 2.5rem; color: var(--dark-color); margin-bottom: 10px;">Our Services</h1>
+            <p style="color: #666; max-width: 600px; margin: 0 auto;">We provide a comprehensive platform connecting
+                skilled professionals with those who need them most.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="service-icon-wrapper"><i class="fas fa-hammer"></i></div>
+                <h3>Construction</h3>
+                <p>Find skilled masons, carpenters, and construction workers for your building projects.</p>
+            </div>
+            <div class="feature-card">
+                <div class="service-icon-wrapper"><i class="fas fa-bolt"></i></div>
+                <h3>Electrical</h3>
+                <p>Professional electricians for wiring, repairs, and installations.</p>
+            </div>
+            <div class="feature-card">
+                <div class="service-icon-wrapper"><i class="fas fa-paint-roller"></i></div>
+                <h3>Painting</h3>
+                <p>Experienced painters for interior and exterior work to beautify your space.</p>
+            </div>
+            <div class="feature-card">
+                <div class="service-icon-wrapper"><i class="fas fa-wrench"></i></div>
+                <h3>Plumbing</h3>
+                <p>Reliable plumbers for leak repairs, pipe installations, and maintenance.</p>
+            </div>
+            <div class="feature-card">
+                <div class="service-icon-wrapper"><i class="fas fa-tools"></i></div>
+                <h3>Handyman</h3>
+                <p>Versatile workers for general repairs, furniture assembly, and home improvements.</p>
+            </div>
+            <div class="feature-card">
+                <div class="service-icon-wrapper"><i class="fas fa-leaf"></i></div>
+                <h3>Landscaping</h3>
+                <p>Expert gardeners for lawn care, planting, and outdoor maintenance.</p>
+            </div>
+        </div>
+
+        <div class="role-section">
+            <div class="role-card" style="border-top-color: var(--primary-color);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <i class="fas fa-user-tie fa-2x" style="color: var(--primary-color);"></i>
+                    <h2 style="margin: 0;">For Job Providers</h2>
+                </div>
+                <p style="color: #666;">Hire the right talent quickly and securely.</p>
+                <ul class="role-list">
+                    <li><i class="fas fa-check-circle"></i> Post job requirements easily</li>
+                    <li><i class="fas fa-check-circle"></i> AI-powered worker recommendations</li>
+                    <li><i class="fas fa-check-circle"></i> View verified profiles and ratings</li>
+                    <li><i class="fas fa-check-circle"></i> Secure online payment protection</li>
+                    <li><i class="fas fa-check-circle"></i> Direct chat with applicants</li>
+                </ul>
+            </div>
+
+            <div class="role-card" style="border-top-color: var(--secondary-color);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <i class="fas fa-hard-hat fa-2x" style="color: var(--secondary-color);"></i>
+                    <h2 style="margin: 0;">For Workers</h2>
+                </div>
+                <p style="color: #666;">Find consistent work and grow your career.</p>
+                <ul class="role-list">
+                    <li><i class="fas fa-check-circle"></i> Browse local job opportunities</li>
+                    <li><i class="fas fa-check-circle"></i> Receive job alerts matching your skills</li>
+                    <li><i class="fas fa-check-circle"></i> Build a professional digital profile</li>
+                    <li><i class="fas fa-check-circle"></i> Earn ratings to get hired faster</li>
+                    <li><i class="fas fa-check-circle"></i> Guaranteed payment for completed work</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Job Workspace</h3>
+                    <p>Connecting job providers with skilled workers</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="../index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="services.html">Services</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: info@jobworkspace.com</p>
+                    <p>Phone: +94 11 234 5678</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Job Workspace. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Auth Check for Navigation
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const navMenu = document.getElementById('navMenu');
+
+            if (token) {
+                const a = document.createElement('a');
+                a.href = "#"; a.className = "nav-link"; a.style.color = "#EF4444"; a.innerText = "Logout";
+                a.onclick = () => { localStorage.clear(); window.location.href = "../index.html"; };
+                navMenu.appendChild(a);
+            } else {
+                navMenu.innerHTML += `
+                    <a href="login.html" class="nav-link">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

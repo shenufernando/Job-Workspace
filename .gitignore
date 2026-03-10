@@ -35,3 +35,9 @@ Thumbs.db
 # Logs
 *.log
 
+backend/uploads/
+
+# AI Models and Datasets
+backend/utils/bert_job_model/
+backend/job_worker_dataset.csv
+backend/utils/bert_label_encoder.pkl

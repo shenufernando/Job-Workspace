@@ -41,9 +41,14 @@ def get_dashboard_stats():
     cursor.execute("SELECT COUNT(*) as count FROM job_posts WHERE status = 'completed'")
     completed_jobs = cursor.fetchone()['count']
     
-    # Total payments
-    cursor.execute("SELECT SUM(amount) as total FROM payments WHERE status = 'completed'")
-    total_payments = cursor.fetchone()['total'] or 0
+    # Total Job Volume
+    cursor.execute("SELECT SUM(salary) as total FROM job_posts WHERE status IN ('approved', 'completed')")
+    total_job_value = cursor.fetchone()['total'] or 0
+
+    # Platform Revenue (500 LKR per active/completed job)
+    cursor.execute("SELECT COUNT(*) as count FROM job_posts WHERE status IN ('approved', 'completed')")
+    paid_jobs_count = cursor.fetchone()['count'] or 0
+    platform_revenue = paid_jobs_count * 500.0
     
     # Total applications
     cursor.execute("SELECT COUNT(*) as count FROM job_applications")
@@ -58,7 +63,40 @@ def get_dashboard_stats():
         'active_jobs': active_jobs,
         'pending_jobs': pending_jobs,
         'completed_jobs': completed_jobs,
-        'total_payments': float(total_payments),
+        'total_job_value': float(total_job_value),
+        'platform_revenue': float(platform_revenue),
         'total_applications': total_applications
     }), 200
 
+@admin_bp.route('/admin/payments', methods=['GET'])
+@role_required('admin')
+def get_payments():
+    # Only admins can view the dedicated payments dashboard
+    from utils.auth import get_current_user
+    current_user = get_current_user()
+    print(f"Admin payments accessed by user: {current_user}")
+    
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    
+    # Fetch all jobs that imply a platform fee (approved or completed)
+    cursor.execute("""
+        SELECT 
+            j.id, j.title, 
+            p.name as provider_name,
+            w.name as worker_name,
+            j.salary as job_volume,
+            500.0 as platform_fee,
+            j.status,
+            j.created_at
+        FROM job_posts j
+        JOIN users p ON j.provider_id = p.id
+        LEFT JOIN job_applications a ON j.id = a.job_id AND a.status = 'accepted'
+        LEFT JOIN users w ON a.worker_id = w.id
+        WHERE j.status IN ('approved', 'completed')
+        ORDER BY j.created_at DESC
+    """)
+    payments = cursor.fetchall()
+    cursor.close()
+    
+    return jsonify(payments), 200

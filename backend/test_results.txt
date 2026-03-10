@@ -1,0 +1,277 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-8.4.2, pluggy-1.6.0 -- C:\Users\ravin\AppData\Local\Programs\Python\Python311\python.exe
+cachedir: .pytest_cache
+rootdir: D:\Assignment Works(Junior)\Shenuri\Job Workspace\backend
+plugins: anyio-4.10.0, cov-6.2.1, flask-1.3.0
+collecting ... collected 10 items
+
+tests/test_api_auth.py::test_health_check PASSED                         [ 10%]
+tests/test_api_auth.py::test_register_then_login FAILED                  [ 20%]
+tests/test_api_auth.py::test_protected_route_requires_auth FAILED        [ 30%]
+tests/test_api_auth.py::test_valid_token_access FAILED                   [ 40%]
+tests/test_api_jobs.py::test_fetch_jobs FAILED                           [ 50%]
+tests/test_api_jobs.py::test_post_new_job FAILED                         [ 60%]
+tests/test_api_jobs.py::test_job_completion_payment_flow FAILED          [ 70%]
+tests/test_ml_inference.py::test_artifacts_load PASSED                   [ 80%]
+tests/test_ml_inference.py::test_embedding_shape PASSED                  [ 90%]
+tests/test_ml_inference.py::test_semantic_matching_score FAILED          [100%]
+
+================================== FAILURES ===================================
+__________________________ test_register_then_login ___________________________
+
+client = <FlaskClient <Flask 'app'>>
+mock_db = (<MagicMock id='2251695037008'>, <MagicMock name='mock.cursor()' id='2251695181968'>, <MagicMock id='2251695016400'>)
+
+    def test_register_then_login(client, mock_db):
+        """Simulate a user registering and then requesting a login token."""
+        mock_conn, mock_cursor, mock_dict_cursor = mock_db
+    
+        # 1. Mock Registration Response (Email doesn't exist yet, insert succeeds)
+        mock_cursor.fetchone.return_value = None  # No existing user
+    
+        register_payload = {
+            "name": "Test User",
+            "email": "test@example.com",
+            "password": "Password123",
+            "role": "worker"
+        }
+    
+        res_reg = client.post('/api/auth/register', json=register_payload)
+        # Our mocked DB doesn't perfectly simulate the g Object teardown logic, but we test the route
+>       assert res_reg.status_code in [201, 500]
+E       assert 404 in [201, 500]
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests\test_api_auth.py:26: AssertionError
+_____________________ test_protected_route_requires_auth ______________________
+
+client = <FlaskClient <Flask 'app'>>
+
+    def test_protected_route_requires_auth(client):
+        """Verify that a protected route natively blocks requests without a valid JWT token."""
+        response = client.get('/api/auth/me')
+>       assert response.status_code == 401
+E       assert 404 == 401
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests\test_api_auth.py:31: AssertionError
+___________________________ test_valid_token_access ___________________________
+
+client = <FlaskClient <Flask 'app'>>
+mock_db = (<MagicMock id='2251691770512'>, <MagicMock name='mock.cursor()' id='2251303505296'>, <MagicMock id='2251694791696'>)
+app = <Flask 'app'>
+
+    def test_valid_token_access(client, mock_db, app):
+        """Verify that simulating a logged-in user with a valid token passes the @jwt_required guard."""
+        from flask_jwt_extended import create_access_token
+    
+        mock_conn, mock_cursor, mock_dict_cursor = mock_db
+    
+        with app.app_context():
+            # Forge a valid JWT token securely
+            token = create_access_token(identity={"id": 1, "role": "admin"})
+    
+            # Test a generic protected route (we bypass specific SQL by looking at route entry)
+            headers = {
+                'Authorization': f'Bearer {token}'
+            }
+    
+            # Mock what the DB returns when checking the user
+            mock_dict_cursor.fetchone.return_value = {
+                "id": 1, "email": "test@test.com", "role": "admin", "name": "Admin"
+            }
+    
+            response = client.get('/api/auth/me', headers=headers)
+>           assert response.status_code == 200
+E           assert 404 == 200
+E            +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests\test_api_auth.py:58: AssertionError
+_______________________________ test_fetch_jobs _______________________________
+
+client = <FlaskClient <Flask 'app'>>
+mock_db = (<MagicMock id='2251665077840'>, <MagicMock name='mock.cursor()' id='2251691783248'>, <MagicMock id='2251695173072'>)
+
+    def test_fetch_jobs(client, mock_db):
+        """Test fetching all active jobs natively through the JSON bridge."""
+        mock_conn, mock_cursor, mock_dict_cursor = mock_db
+    
+        # Mock database returning a single job instance
+        mock_dict_cursor.fetchall.return_value = [
+            {
+                "id": 101,
+                "title": "Need a Plumber",
+                "description": "Fix my sink",
+                "required_skills": "plumbing",
+                "budget": 5000,
+                "status": "pending",
+                "provider_id": 1,
+                "provider_name": "John Doe",
+                "created_at": "2023-10-01"
+            }
+        ]
+    
+        response = client.get('/api/jobs')
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <WrapperTestResponse streamed [401 UNAUTHORIZED]>.status_code
+
+tests\test_api_jobs.py:25: AssertionError
+---------------------------- Captured stdout call -----------------------------
+JWT verification error in get_current_user: Missing Authorization Header
+---------------------------- Captured stderr call -----------------------------
+Traceback (most recent call last):
+  File "D:\Assignment Works(Junior)\Shenuri\Job Workspace\backend\utils\auth.py", line 28, in get_current_user
+    verify_jwt_in_request()
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_jwt_extended\view_decorators.py", line 94, in verify_jwt_in_request
+    jwt_data, jwt_header, jwt_location = _decode_jwt_from_request(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_jwt_extended\view_decorators.py", line 358, in _decode_jwt_from_request
+    raise NoAuthorizationError(errors[0])
+flask_jwt_extended.exceptions.NoAuthorizationError: Missing Authorization Header
+______________________________ test_post_new_job ______________________________
+
+client = <FlaskClient <Flask 'app'>>
+mock_db = (<MagicMock id='2251694783376'>, <MagicMock name='mock.cursor()' id='2251691868560'>, <MagicMock id='2251695293456'>)
+app = <Flask 'app'>
+
+    def test_post_new_job(client, mock_db, app):
+        """Verify a Provider can successfully post a new job."""
+        mock_conn, mock_cursor, mock_dict_cursor = mock_db
+    
+        with app.app_context():
+            token = create_access_token(identity={"id": 1, "role": "provider"})
+    
+        headers = {'Authorization': f'Bearer {token}'}
+    
+        payload = {
+            "title": "Electrician Needed",
+            "description": "Wiring issues in the living room.",
+            "skills": "electrical, wiring",
+            "location": "colombo",
+            "budget": 6000
+        }
+    
+        response = client.post('/api/jobs', headers=headers, json=payload)
+    
+>       assert response.status_code == 201
+E       assert 403 == 201
+E        +  where 403 = <WrapperTestResponse streamed [403 FORBIDDEN]>.status_code
+
+tests\test_api_jobs.py:48: AssertionError
+---------------------------- Captured stdout call -----------------------------
+JWT verification error in get_current_user: Subject must be a string
+---------------------------- Captured stderr call -----------------------------
+Traceback (most recent call last):
+  File "D:\Assignment Works(Junior)\Shenuri\Job Workspace\backend\utils\auth.py", line 28, in get_current_user
+    verify_jwt_in_request()
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_jwt_extended\view_decorators.py", line 94, in verify_jwt_in_request
+    jwt_data, jwt_header, jwt_location = _decode_jwt_from_request(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_jwt_extended\view_decorators.py", line 340, in _decode_jwt_from_request
+    decoded_token = decode_token(encoded_token, csrf_token)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_jwt_extended\utils.py", line 128, in decode_token
+    return jwt_manager._decode_jwt_from_config(encoded_token, csrf_value, allow_expired)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_jwt_extended\jwt_manager.py", line 556, in _decode_jwt_from_config
+    return _decode_jwt(**kwargs, allow_expired=allow_expired)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask_jwt_extended\tokens.py", line 95, in _decode_jwt
+    decoded_token = jwt.decode(
+                    ^^^^^^^^^^^
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\jwt\api_jwt.py", line 222, in decode
+    decoded = self.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\jwt\api_jwt.py", line 167, in decode_complete
+    self._validate_claims(
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\jwt\api_jwt.py", line 273, in _validate_claims
+    self._validate_sub(payload, subject)
+  File "C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\jwt\api_jwt.py", line 300, in _validate_sub
+    raise InvalidSubjectError("Subject must be a string")
+jwt.exceptions.InvalidSubjectError: Subject must be a string
+______________________ test_job_completion_payment_flow _______________________
+
+client = <FlaskClient <Flask 'app'>>
+mock_db = (<MagicMock id='2251691432336'>, <MagicMock name='mock.cursor()' id='2251694916496'>, <MagicMock id='2251694698256'>)
+app = <Flask 'app'>
+
+    def test_job_completion_payment_flow(client, mock_db, app):
+        """Test the completion logic validating the Payment Modal trigger explicitly."""
+        mock_conn, mock_cursor, mock_dict_cursor = mock_db
+    
+        with app.app_context():
+            token = create_access_token(identity={"id": 1, "role": "provider"})
+    
+        headers = {'Authorization': f'Bearer {token}'}
+    
+        # Mock checking job existence and ownership
+        mock_dict_cursor.fetchone.return_value = {
+            "id": 1, "provider_id": 1, "status": "accepted", "worker_id": 2
+        }
+    
+        response = client.post('/api/jobs/1/complete', headers=headers)
+    
+        # If successful, it performs multiple internal updates and returns 200
+>       assert response.status_code == 200
+E       assert 405 == 200
+E        +  where 405 = <WrapperTestResponse streamed [405 METHOD NOT ALLOWED]>.status_code
+
+tests\test_api_jobs.py:68: AssertionError
+________________________ test_semantic_matching_score _________________________
+
+    def test_semantic_matching_score():
+        """Verify the cosine similarity logic ranks matching skills higher than unrelated string inputs."""
+    
+        if ai.model is None or ai.tokenizer is None:
+            load_ai_models()
+    
+        # Mocking Job Post
+        job = {
+            "title": "Senior Plumber",
+            "required_skills": "pipe fitting, water heater installation, leak repair"
+        }
+    
+        # Mocking two distinct workers
+        worker_good = {
+            "id": 1,
+            "position": "Plumber",
+            "skills": "fixing pipes, repairing water heaters, plumbing"
+        }
+    
+        worker_bad = {
+            "id": 2,
+            "position": "Electrician",
+            "skills": "wiring, circuit boards, high voltage"
+        }
+    
+        workers = [worker_good, worker_bad]
+    
+        ranked_workers = get_ranked_workers(job, workers)
+    
+        # Extract final match percentages
+        good_score = next(w['final_match_percentage'] for w in ranked_workers if w['id'] == 1)
+>       bad_score = next(w['final_match_percentage'] for w in ranked_workers if w['id'] == 2)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_ml_inference.py:66: StopIteration
+---------------------------- Captured stdout call -----------------------------
+DEBUG: Returning 1 workers to frontend with match_percentage.
+============================== warnings summary ===============================
+C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\base.py:442
+tests/test_ml_inference.py::test_artifacts_load
+  C:\Users\ravin\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\base.py:442: InconsistentVersionWarning: Trying to unpickle estimator LabelEncoder from version 1.6.1 when using version 1.7.1. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+  https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_api_auth.py::test_register_then_login - assert 404 in [201,...
+FAILED tests/test_api_auth.py::test_protected_route_requires_auth - assert 40...
+FAILED tests/test_api_auth.py::test_valid_token_access - assert 404 == 200
+FAILED tests/test_api_jobs.py::test_fetch_jobs - assert 401 == 200
+FAILED tests/test_api_jobs.py::test_post_new_job - assert 403 == 201
+FAILED tests/test_api_jobs.py::test_job_completion_payment_flow - assert 405 ...
+FAILED tests/test_ml_inference.py::test_semantic_matching_score - StopIteration
+=================== 7 failed, 3 passed, 2 warnings in 0.45s ===================

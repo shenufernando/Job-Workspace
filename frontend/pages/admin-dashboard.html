@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,7 +10,7 @@
     <style>
         /* --- Sidebar Layout Styles --- */
         body {
-            background-color: #F3F4F6;
+            background-color: var(--bg);
             display: flex;
             min-height: 100vh;
             margin: 0;
@@ -20,8 +20,9 @@
         /* Sidebar */
         .sidebar {
             width: 260px;
-            background-color: #1F2937;
-            color: #E5E7EB;
+            background: var(--white);\r
+            border-right: 1px solid var(--slate-200);
+            color: #f8fafc;
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -29,7 +30,7 @@
             bottom: 0;
             left: 0;
             z-index: 1000;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
         }
 
         .sidebar-brand {
@@ -38,9 +39,9 @@
             align-items: center;
             padding: 0 25px;
             font-size: 1.25rem;
-            font-weight: bold;
-            color: white;
-            border-bottom: 1px solid #374151;
+            font-weight: 800;
+            color: var(--slate-900);
+            border-bottom: 1px solid var(--slate-200);
             gap: 10px;
         }
 
@@ -54,23 +55,23 @@
         .sidebar-link {
             display: flex;
             align-items: center;
-            padding: 12px 25px;
-            color: #9CA3AF;
+            padding: 14px 25px;
+            color: #475569;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all var(--duration) var(--ease);
             font-weight: 500;
             border-left: 4px solid transparent;
         }
 
         .sidebar-link:hover {
-            background-color: #374151;
-            color: white;
+            background: var(--bg);
+            color: var(--slate-900);
         }
 
         .sidebar-link.active {
-            background-color: #374151;
-            color: white;
-            border-left-color: var(--primary-color);
+            background: #eff6ff;
+            color: var(--primary);
+            border-left-color: var(--primary);
         }
 
         .sidebar-link i {
@@ -80,7 +81,7 @@
 
         .sidebar-footer {
             padding: 20px 25px;
-            border-top: 1px solid #374151;
+            border-top: 1px solid var(--slate-200);
         }
 
         /* Main Content */
@@ -104,10 +105,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--white);
+            padding: 8px 16px;
+            border-radius: var(--r-full);
+            box-shadow: var(--shadow-sm);
         }
 
         /* Stats & Tables */
@@ -120,7 +121,7 @@
 
         .section-header h2 {
             font-size: 1.8rem;
-            color: #111827;
+            color: var(--text-primary);
             margin: 0;
         }
 
@@ -133,39 +134,55 @@
         .stat-card {
             background: white;
             padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-card);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-left: 4px solid var(--primary-color);
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: all var(--duration) var(--ease);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .stat-info {
+            position: relative;
+            z-index: 10;
         }
 
         .stat-info h3 {
             font-size: 0.85rem;
-            color: #6B7280;
+            color: var(--text-secondary);
             text-transform: uppercase;
             margin-bottom: 5px;
         }
 
         .stat-info .stat-value {
-            font-size: 1.8rem;
+            font-size: clamp(1.1rem, 2vw, 1.8rem);
             font-weight: 700;
-            color: #111827;
+            color: var(--text-primary);
         }
 
         .stat-icon {
             font-size: 2.2rem;
             opacity: 0.15;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         /* Table */
         .table-container {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
             overflow-x: auto;
+            overflow-y: hidden;
+            border: 1px solid #e2e8f0;
         }
 
         .admin-table {
@@ -175,24 +192,25 @@
         }
 
         .admin-table th {
-            background: #F9FAFB;
-            padding: 15px 20px;
+            background: #f8fafc;
+            padding: 16px 20px;
             text-align: left;
             font-size: 0.85rem;
-            color: #6B7280;
+            color: #475569;
             text-transform: uppercase;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .admin-table td {
-            padding: 15px 20px;
-            border-bottom: 1px solid #E5E7EB;
-            color: #374151;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
             vertical-align: middle;
+            transition: background 0.2s;
         }
 
-        .admin-table tr:hover {
-            background: #F9FAFB;
+        .admin-table tr:hover td {
+            background: #f8fafc;
         }
 
         /* Elements */
@@ -221,7 +239,7 @@
 
         .action-btn {
             padding: 6px 10px;
-            border-radius: 6px;
+            border-radius: var(--r-sm);
             border: none;
             cursor: pointer;
             font-size: 0.8rem;
@@ -255,16 +273,16 @@
         }
 
         .notification-bell:hover {
-            background: #F3F4F6;
-            color: var(--primary-color);
+            background: var(--slate-100);
+            color: var(--primary);
         }
 
         .notification-badge {
             position: absolute;
             top: -2px;
             right: -2px;
-            background: #EF4444;
-            color: white;
+            background: var(--danger);
+            color: var(--slate-900);
             border-radius: 50%;
             width: 18px;
             height: 18px;
@@ -272,7 +290,7 @@
             align-items: center;
             justify-content: center;
             font-size: 0.7rem;
-            border: 2px solid #F3F4F6;
+            border: 2px solid var(--slate-100);
         }
 
         /* Mobile */
@@ -322,6 +340,9 @@
                     <span>Users</span></a></li>
             <li><a href="#" onclick="loadJobs()" class="sidebar-link" id="nav-jobs"><i class="fas fa-briefcase"></i>
                     <span>Job Posts</span></a></li>
+            <li><a href="#" onclick="loadPayments()" class="sidebar-link" id="nav-payments"><i
+                        class="fas fa-money-bill-wave"></i>
+                    <span>Payments</span></a></li>
             <li><a href="#" onclick="loadReviews()" class="sidebar-link" id="nav-reviews"><i class="fas fa-star"></i>
                     <span>Reviews</span></a></li>
         </ul>
@@ -334,15 +355,17 @@
     <main class="main-content">
 
         <div class="top-header">
+
+            <div id="google_translate_element" style="margin-right: 15px;"></div>
             <div class="notification-bell" onclick="loadNotifications()">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
             </div>
 
             <div class="user-pill">
-                <i class="fas fa-user-circle" style="color: #6B7280; font-size: 1.2rem;"></i>
-                <span style="font-weight: 500; color: #374151; font-size: 0.9rem;">Administrator</span>
-                <span style="border-left: 1px solid #E5E7EB; padding-left: 10px; color: #6B7280; font-size: 0.85rem;"
+                <i class="fas fa-user-circle" style="color: var(--text-secondary); font-size: 1.2rem;"></i>
+                <span style="font-weight: 500; color: var(--text-primary); font-size: 0.9rem;">Administrator</span>
+                <span style="border-left: 1px solid #E5E7EB; padding-left: 10px; color: var(--text-secondary); font-size: 0.85rem;"
                     id="currentDate"></span>
             </div>
         </div>
@@ -356,7 +379,7 @@
 
         <div id="usersSection" style="display: none;">
             <div class="section-header">
-                <h2>User Management</h2>
+                <h2 id="usersTableTitle">User Management</h2>
             </div>
             <div class="table-container">
                 <table class="admin-table">
@@ -376,7 +399,7 @@
 
         <div id="jobsSection" style="display: none;">
             <div class="section-header">
-                <h2>Job Post Management</h2>
+                <h2 id="jobsTableTitle">Job Post Management</h2>
             </div>
             <div class="table-container">
                 <table class="admin-table">
@@ -390,6 +413,26 @@
                         </tr>
                     </thead>
                     <tbody id="jobsList"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="paymentsSection" style="display: none;">
+            <div class="section-header">
+                <h2>Payments & Revenue</h2>
+            </div>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Provider</th>
+                            <th>Job Volume (LKR)</th>
+                            <th>Platform Fee (LKR)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsList"></tbody>
                 </table>
             </div>
         </div>
@@ -408,13 +451,13 @@
                 <button class="action-btn btn-sm-success" onclick="markAllAsRead()">Mark All Read</button>
             </div>
             <div class="card"
-                style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                style="background: white; padding: 20px; border-radius: var(--r-xl); box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                 <div id="notificationsList" class="job-list"></div>
             </div>
         </div>
 
     </main>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../js/main.js"></script>
     <script>
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
@@ -426,7 +469,7 @@
                     logout(); return;
                 }
                 loadDashboardStats();
-                checkNotifications(); // Start checking for alerts
+                checkNotifications();
             }, 50);
         });
 
@@ -434,8 +477,7 @@
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             if (id) document.getElementById(id).classList.add('active');
 
-            // Hide all sections
-            ['statsSection', 'usersSection', 'jobsSection', 'reviewsSection', 'notificationsSection'].forEach(sec => {
+            ['statsSection', 'usersSection', 'jobsSection', 'reviewsSection', 'notificationsSection', 'paymentsSection'].forEach(sec => {
                 document.getElementById(sec).style.display = 'none';
             });
         }
@@ -452,30 +494,44 @@
 
         function displayStats(stats) {
             const grid = document.getElementById('statsGrid');
-            const createCard = (title, value, icon, color) => `
-                <div class="stat-card" style="border-left-color: ${color}">
-                    <div class="stat-info"><h3>${title}</h3><div class="stat-value">${value}</div></div>
-                    <i class="${icon} stat-icon" style="color: ${color}"></i>
-                </div>`;
+            const createCard = (title, value, icon, color, action) => {
+                const clickAttr = action ? `onclick="${action}"` : '';
+                const cursorStyle = action ? 'cursor: pointer;' : 'cursor: default;';
+                return `
+                    <div class="stat-card" style="border-left-color: ${color}; ${cursorStyle}" ${clickAttr}>
+                        <div class="stat-info"><h3>${title}</h3><div class="stat-value">${value}</div></div>
+                        <i class="${icon} stat-icon" style="color: ${color}"></i>
+                    </div>`;
+            };
+
             grid.innerHTML = `
-                ${createCard('Total Users', stats.total_users, 'fas fa-users', '#4F46E5')}
-                ${createCard('Workers', stats.total_workers, 'fas fa-hard-hat', '#10B981')}
-                ${createCard('Providers', stats.total_providers, 'fas fa-user-tie', '#F59E0B')}
-                ${createCard('Active Jobs', stats.active_jobs, 'fas fa-briefcase', '#3B82F6')}
-                ${createCard('Pending Approval', stats.pending_jobs, 'fas fa-clock', '#F97316')}
-                ${createCard('Completed', stats.completed_jobs, 'fas fa-check-circle', '#6B7280')}
-                ${createCard('Total Payments', formatCurrency(stats.total_payments), 'fas fa-coins', '#8B5CF6')}
-                ${createCard('Applications', stats.total_applications, 'fas fa-file-alt', '#EC4899')}
+                ${createCard('Total Users', stats.total_users, 'fas fa-users', '#4F46E5', "loadUsers()")}
+                ${createCard('Workers', stats.total_workers, 'fas fa-hard-hat', '#10B981', "loadUsers('worker')")}
+                ${createCard('Providers', stats.total_providers, 'fas fa-user-tie', '#F59E0B', "loadUsers('provider')")}
+                ${createCard('Active Jobs', stats.active_jobs, 'fas fa-briefcase', '#3B82F6', "loadJobs('approved')")}
+                ${createCard('Pending Approval', stats.pending_jobs, 'fas fa-clock', '#F97316', "loadJobs('pending')")}
+                ${createCard('Completed', stats.completed_jobs, 'fas fa-check-circle', '#6B7280', "loadJobs('completed')")}
+                ${createCard('Total Job Volume', formatCurrency(stats.total_job_value || 0), 'fas fa-hand-holding-usd', '#8B5CF6', "loadPayments()")}
+                ${createCard('Platform Revenue', formatCurrency(stats.platform_revenue || 0), 'fas fa-chart-line', '#10B981', "loadPayments()")}
+                ${createCard('Applications', stats.total_applications, 'fas fa-file-alt', '#EC4899', "loadJobs()")}
             `;
         }
 
         // --- Users ---
-        async function loadUsers() {
+        async function loadUsers(filterRole = null) {
             setActiveNav('nav-users');
             document.getElementById('usersSection').style.display = 'block';
+
+            const titleEl = document.getElementById('usersTableTitle');
+            if (filterRole === 'worker') titleEl.textContent = 'User Management (Workers)';
+            else if (filterRole === 'provider') titleEl.textContent = 'User Management (Providers)';
+            else titleEl.textContent = 'User Management (All)';
+
             try {
                 const users = await apiRequest('/users');
-                document.getElementById('usersList').innerHTML = users.map(user => `
+                const filteredUsers = filterRole ? users.filter(u => u.role === filterRole) : users;
+
+                document.getElementById('usersList').innerHTML = filteredUsers.map(user => `
                     <tr>
                         <td><div style="font-weight: 600;">${user.name}</div><div style="font-size: 0.8rem; color: #9CA3AF;">ID: ${user.id}</div></td>
                         <td><span class="role-badge role-${user.role}">${user.role}</span></td>
@@ -486,25 +542,50 @@
             } catch (error) { showAlert(error.message, 'error'); }
         }
         async function deleteUser(id) {
-            if (confirm('Delete user?')) { await apiRequest(`/users/${id}`, { method: 'DELETE' }); loadUsers(); }
+            const result = await Swal.fire({
+                title: 'Delete User?',
+                text: 'This will permanently remove the user account.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, Delete User'
+            });
+            if (!result.isConfirmed) return;
+            try {
+                await apiRequest(`/users/${id}`, { method: 'DELETE' });
+                showAlert('User deleted successfully.', 'success');
+                loadUsers();
+            } catch (e) { showAlert(e.message, 'error'); }
         }
 
         // --- Jobs ---
-        async function loadJobs() {
+        async function loadJobs(filterStatus = null) {
             setActiveNav('nav-jobs');
             document.getElementById('jobsSection').style.display = 'block';
+
+            const titleEl = document.getElementById('jobsTableTitle');
+            if (filterStatus === 'pending') titleEl.textContent = 'Pending Jobs (Need Approval)';
+            else if (filterStatus === 'approved') titleEl.textContent = 'Active Jobs';
+            else if (filterStatus === 'completed') titleEl.textContent = 'Completed Jobs';
+            else titleEl.textContent = 'All Job Posts';
+
             try {
                 const jobs = await apiRequest('/jobs');
                 const list = document.getElementById('jobsList');
-                if (jobs.length === 0) { list.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#999">No jobs found.</td></tr>'; return; }
-                list.innerHTML = jobs.map(job => `
+
+                const filteredJobs = filterStatus ? jobs.filter(j => j.status === filterStatus) : jobs;
+
+                if (filteredJobs.length === 0) { list.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#999">No jobs found in this category.</td></tr>'; return; }
+
+                list.innerHTML = filteredJobs.map(job => `
                     <tr>
-                        <td><div style="font-weight: 600;">${job.title}</div><div style="font-size: 0.8rem; color: #6B7280; max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${job.description}</div></td>
+                        <td><div style="font-weight: 600;">${job.title}</div><div style="font-size: 0.8rem; color: var(--text-secondary); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${job.description}</div></td>
                         <td>${job.provider_name}</td>
                         <td><div>${job.location}</div><div style="font-weight: 600; color: #059669;">${formatCurrency(job.salary || 0)}</div></td>
                         <td><span class="role-badge" style="background:${job.status === 'approved' ? '#D1FAE5' : job.status === 'pending' ? '#FEF3C7' : '#F3F4F6'}; color:${job.status === 'approved' ? '#065F46' : job.status === 'pending' ? '#D97706' : '#374151'}">${job.status}</span></td>
                         <td>
-                            ${job.status === 'pending' && job.payment_status === 'paid' ? `
+                            ${job.status === 'pending' ? `
                                 <button class="action-btn btn-sm-success" title="Approve" onclick="approveJob(${job.id})"><i class="fas fa-check"></i></button>
                                 <button class="action-btn btn-sm-danger" title="Reject" onclick="rejectJob(${job.id})"><i class="fas fa-times"></i></button>
                             ` : ''}
@@ -513,9 +594,25 @@
                     </tr>`).join('');
             } catch (error) { showAlert(error.message, 'error'); }
         }
-        async function approveJob(id) { await apiRequest(`/jobs/${id}`, { method: 'PUT', body: JSON.stringify({ status: 'approved' }) }); loadJobs(); }
-        async function rejectJob(id) { await apiRequest(`/jobs/${id}`, { method: 'PUT', body: JSON.stringify({ status: 'rejected' }) }); loadJobs(); }
-        async function deleteJob(id) { if (confirm('Delete job?')) { await apiRequest(`/jobs/${id}`, { method: 'DELETE' }); loadJobs(); } }
+        async function approveJob(id) { await apiRequest(`/jobs/${id}`, { method: 'PUT', body: JSON.stringify({ status: 'approved' }) }); loadJobs('pending'); }
+        async function rejectJob(id) { await apiRequest(`/jobs/${id}`, { method: 'PUT', body: JSON.stringify({ status: 'rejected' }) }); loadJobs('pending'); }
+        async function deleteJob(id) {
+            const result = await Swal.fire({
+                title: 'Delete Job?',
+                text: 'This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, Delete It'
+            });
+            if (!result.isConfirmed) return;
+            try {
+                await apiRequest(`/jobs/${id}`, { method: 'DELETE' });
+                showAlert('Job deleted successfully.', 'success');
+                loadJobs();
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
 
         // --- Reviews ---
         async function loadReviews() {
@@ -539,7 +636,45 @@
                 }).join('');
             } catch (error) { showAlert(error.message, 'error'); }
         }
-        async function deleteReview(id) { if (confirm('Delete?')) { await apiRequest(`/reviews/${id}`, { method: 'DELETE' }); loadReviews(); } }
+        async function deleteReview(id) {
+            const result = await Swal.fire({
+                title: 'Delete Review?',
+                text: 'This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, Delete It'
+            });
+            if (!result.isConfirmed) return;
+            try {
+                await apiRequest(`/reviews/${id}`, { method: 'DELETE' });
+                showAlert('Review deleted.', 'success');
+                loadReviews();
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
+
+        // --- Payments ---
+        async function loadPayments() {
+            setActiveNav('nav-payments');
+            document.getElementById('paymentsSection').style.display = 'block';
+
+            try {
+                const payments = await apiRequest('/admin/payments');
+                const list = document.getElementById('paymentsList');
+
+                if (payments.length === 0) { list.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#999">No payments found.</td></tr>'; return; }
+
+                list.innerHTML = payments.map(p => `
+                    <tr>
+                        <td><div style="font-weight: 600;">${p.title}</div><div style="font-size: 0.8rem; color: var(--text-secondary);">ID: ${p.id}</div></td>
+                        <td>${p.provider_name}</td>
+                        <td><div style="font-weight: 600; color: var(--text-primary);">${formatCurrency(p.job_volume || 0)}</div></td>
+                        <td><div style="font-weight: 600; color: #059669;">${formatCurrency(p.platform_fee || 0)}</div></td>
+                        <td><span class="role-badge" style="background:${p.status === 'completed' ? '#D1FAE5' : '#DBEAFE'}; color:${p.status === 'completed' ? '#065F46' : '#1E40AF'}">${p.status}</span></td>
+                    </tr>`).join('');
+            } catch (error) { showAlert(error.message, 'error'); }
+        }
 
         // --- Notifications ---
         async function checkNotifications() {
@@ -553,7 +688,7 @@
         }
 
         async function loadNotifications() {
-            setActiveNav(null); // Deselect sidebar
+            setActiveNav(null);
             document.getElementById('notificationsSection').style.display = 'block';
 
             try {
@@ -579,6 +714,19 @@
 
         function logout() { removeAuthToken(); removeCurrentUser(); window.location.href = 'login.html'; }
     </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

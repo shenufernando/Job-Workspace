@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Manual - Job Workspace</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-manual {
+            background: linear-gradient(rgba(79, 70, 229, 0.9), rgba(124, 58, 237, 0.8)), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0 80px;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-manual h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-manual p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .manual-section {
+            padding: 60px 20px;
+            background: #F9FAFB;
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        @media(max-width: 768px) {
+            .guide-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .guide-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guide-card.provider {
+            border-top: 5px solid #4F46E5;
+            /* Purple accent */
+        }
+
+        .guide-card.worker {
+            border-top: 5px solid #10B981;
+            /* Green accent */
+        }
+
+        .guide-icon-bg {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 10rem;
+            opacity: 0.03;
+        }
+
+        .guide-card.provider .guide-icon-bg {
+            color: #4F46E5;
+        }
+
+        .guide-card.worker .guide-icon-bg {
+            color: #10B981;
+        }
+
+        .guide-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .guide-card.provider .guide-title {
+            color: #4F46E5;
+        }
+
+        .guide-card.worker .guide-title {
+            color: #10B981;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+            margin-right: 15px;
+            margin-top: 3px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .guide-card.provider .step-number {
+            background: #4F46E5;
+        }
+
+        .guide-card.worker .step-number {
+            background: #10B981;
+        }
+
+        .step-content h4 {
+            font-size: 1.15rem;
+            color: #1F2937;
+            margin: 0 0 8px 0;
+        }
+
+        .step-content p {
+            color: #6B7280;
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="../index.html"
+                    style="text-decoration:none; color:inherit; display:flex; gap:10px; align-items:center;">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Job Workspace</span>
+                </a>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="user-manual.html" class="nav-link active">User Manual</a>
+            
+                <div class="language-selector">
+                    <div id="google_translate_element"></div>
+                </div>
+</div>
+        </div>
+    </nav>
+
+    <section class="hero-manual">
+        <div class="container">
+            <h1>Job Workspace User Manual</h1>
+            <p>Everything you need to know to hire skilled professionals or find your next job opportunity.</p>
+        </div>
+    </section>
+
+    <section class="manual-section">
+        <div class="container">
+            <div class="guide-grid">
+
+                <!-- Provider Guide -->
+                <div class="guide-card provider">
+                    <i class="fas fa-building guide-icon-bg"></i>
+                    <h2 class="guide-title"><i class="fas fa-user-tie"></i> Guide for Job Providers</h2>
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Sign up as a Provider</h4>
+                                <p>Create your account by selecting the "Provider" role. This gives you access to the
+                                    dashboard where you can manage your hirings.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Post a New Job</h4>
+                                <p>Provide clear details about the work required, the salary, and explicitly list the
+                                    <strong>Required Skills</strong> so our AI can find the perfect match.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>View AI-powered Best Matches</h4>
+                                <p>Once the job is published, click "Matches" to see the workers our BERT AI algorithm
+                                    has mathematically ranked based on skills, location, and experience.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Accept Applicants & Collaborate</h4>
+                                <p>Review the applicants, accept the best candidate, and utilize the real-time
+                                    Multimodal Chat (which supports Images and Voice) or initiate a seamless Video/Audio
+                                    Call.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Complete the Job & Pay</h4>
+                                <p>Once the work is done, click the "Complete" button to open the Payment Modal.
+                                    Securely select "Cash" or "Card" to pay the worker's salary and finalize the
+                                    project.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Worker Guide -->
+                <div class="guide-card worker">
+                    <i class="fas fa-tools guide-icon-bg"></i>
+                    <h2 class="guide-title"><i class="fas fa-hard-hat"></i> Guide for Workers</h2>
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Sign up as a Worker</h4>
+                                <p>Register as a skilled worker to explore hundreds of active daily-wage and remote job
+                                    opportunities across the platform.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Complete Your Profile</h4>
+                                <p>Update your personal details, upload a profile picture, and critically, add your
+                                    <strong>Specific Skills</strong>. The AI uses this to rank you for jobs!</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Browse Recommended Jobs</h4>
+                                <p>Check the "Recommended" section on your dashboard. These jobs are mathematically
+                                    proven to be a high match for your specific skillset.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Apply & Communicate</h4>
+                                <p>Apply for the jobs you want. Once accepted, you can securely communicate with the
+                                    provider via Chat or Video call directly through the workspace.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Get Hired & Paid</h4>
+                                <p>Finish the job successfully. The provider will trigger the Secure Completion process
+                                    and route your salary directly to you!</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Job Workspace. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const navMenu = document.getElementById('navMenu');
+
+            if (token) {
+                const logoutLink = document.createElement('a');
+                logoutLink.href = '#';
+                logoutLink.className = 'nav-link';
+                logoutLink.style.color = '#EF4444';
+                logoutLink.innerHTML = 'Logout';
+                logoutLink.onclick = () => {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '../index.html';
+                };
+                navMenu.appendChild(logoutLink);
+            } else {
+                navMenu.innerHTML += `
+                    <a href="login.html" class="nav-link">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                `;
+            }
+        });
+    </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+
+</html>
+
+

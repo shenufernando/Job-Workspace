@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,37 +8,42 @@
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        .services-page {
+            padding: 64px 0;
+        }
+
         .service-icon-wrapper {
-            width: 70px;
-            height: 70px;
-            background-color: #EEF2FF;
+            width: 68px;
+            height: 68px;
+            background: var(--primary-light);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            transition: background-color 0.3s;
+            transition: all var(--duration) var(--ease);
         }
 
         .feature-card:hover .service-icon-wrapper {
-            background-color: var(--primary-color);
-        }
-
-        .feature-card:hover .service-icon-wrapper i {
-            color: white;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            box-shadow: 0 4px 14px var(--primary-glow);
         }
 
         .service-icon-wrapper i {
             font-size: 1.8rem;
-            color: var(--primary-color);
-            transition: color 0.3s;
+            color: var(--primary);
+            transition: color var(--duration) var(--ease);
+        }
+
+        .feature-card:hover .service-icon-wrapper i {
+            color: var(--white);
         }
 
         .role-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-top: 60px;
+            gap: 32px;
+            margin-top: 64px;
         }
 
         @media(max-width: 768px) {
@@ -48,30 +53,52 @@
         }
 
         .role-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border-top: 5px solid;
+            background: var(--white);
+            padding: 32px;
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--primary);
+            transition: all var(--duration-slow) var(--ease);
+        }
+
+        .role-card.alt {
+            border-top-color: var(--secondary);
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .role-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .role-card-header h2 {
+            margin: 0;
         }
 
         .role-list {
             list-style: none;
             padding: 0;
-            margin-top: 20px;
+            margin-top: 18px;
         }
 
         .role-list li {
-            margin-bottom: 15px;
+            margin-bottom: 13px;
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #4B5563;
+            color: var(--text-secondary);
+            font-size: 0.93rem;
         }
 
         .role-list i {
-            color: #10B981;
-            /* Green checkmark */
+            color: var(--secondary);
         }
     </style>
 </head>
@@ -80,8 +107,7 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <a href="../index.html"
-                    style="text-decoration:none; color:inherit; display:flex; gap:10px; align-items:center;">
+                <a href="../index.html" style="text-decoration:none;display:flex;gap:10px;align-items:center;">
                     <i class="fas fa-briefcase"></i>
                     <span>Job Workspace</span>
                 </a>
@@ -91,15 +117,19 @@
                 <a href="about.html" class="nav-link">About</a>
                 <a href="services.html" class="nav-link active">Services</a>
                 <a href="contact.html" class="nav-link">Contact</a>
+
+                <div class="language-selector">
+                    <div id="google_translate_element"></div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container" style="padding: 60px 20px;">
-        <div style="text-align: center; margin-bottom: 50px;">
-            <h1 style="font-size: 2.5rem; color: var(--dark-color); margin-bottom: 10px;">Our Services</h1>
-            <p style="color: #666; max-width: 600px; margin: 0 auto;">We provide a comprehensive platform connecting
-                skilled professionals with those who need them most.</p>
+    <div class="container services-page">
+        <div style="text-align:center; margin-bottom:52px;">
+            <h1 class="section-title">Our Services</h1>
+            <p class="section-subtitle">We provide a comprehensive platform connecting skilled professionals with those
+                who need them most.</p>
         </div>
 
         <div class="features-grid">
@@ -136,12 +166,12 @@
         </div>
 
         <div class="role-section">
-            <div class="role-card" style="border-top-color: var(--primary-color);">
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                    <i class="fas fa-user-tie fa-2x" style="color: var(--primary-color);"></i>
-                    <h2 style="margin: 0;">For Job Providers</h2>
+            <div class="role-card">
+                <div class="role-card-header">
+                    <i class="fas fa-user-tie fa-2x" style="color: var(--primary);"></i>
+                    <h2>For Job Providers</h2>
                 </div>
-                <p style="color: #666;">Hire the right talent quickly and securely.</p>
+                <p style="color: var(--text-secondary);">Hire the right talent quickly and securely.</p>
                 <ul class="role-list">
                     <li><i class="fas fa-check-circle"></i> Post job requirements easily</li>
                     <li><i class="fas fa-check-circle"></i> AI-powered worker recommendations</li>
@@ -151,12 +181,12 @@
                 </ul>
             </div>
 
-            <div class="role-card" style="border-top-color: var(--secondary-color);">
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                    <i class="fas fa-hard-hat fa-2x" style="color: var(--secondary-color);"></i>
-                    <h2 style="margin: 0;">For Workers</h2>
+            <div class="role-card alt">
+                <div class="role-card-header">
+                    <i class="fas fa-hard-hat fa-2x" style="color: var(--secondary);"></i>
+                    <h2>For Workers</h2>
                 </div>
-                <p style="color: #666;">Find consistent work and grow your career.</p>
+                <p style="color: var(--text-secondary);">Find consistent work and grow your career.</p>
                 <ul class="role-list">
                     <li><i class="fas fa-check-circle"></i> Browse local job opportunities</li>
                     <li><i class="fas fa-check-circle"></i> Receive job alerts matching your skills</li>
@@ -184,7 +214,7 @@
                 </div>
                 <div class="footer-section">
                     <h4>Contact</h4>
-                    <p>Email: info@jobworkspace.com</p>
+                    <p>Email: jobworkspace123@gmail.com</p>
                     <p>Phone: +94 11 234 5678</p>
                 </div>
             </div>
@@ -193,7 +223,7 @@
             </div>
         </div>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../js/main.js"></script>
     <script>
         // Auth Check for Navigation
@@ -214,6 +244,19 @@
             }
         });
     </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

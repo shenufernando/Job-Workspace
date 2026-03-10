@@ -1,9 +1,35 @@
 from flask import Blueprint, request, jsonify
 import sys
 import os
+import smtplib
+from email.message import EmailMessage
+import threading
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.database import get_db
 from utils.auth import hash_password, verify_password, create_token
+
+def send_login_email(user_email, user_name):
+    try:
+        sender_email = os.getenv('MAIL_USERNAME')
+        sender_password = os.getenv('MAIL_PASSWORD')
+        
+        if not sender_email or not sender_password:
+            print("Mail credentials not found, skipping email notification.")
+            return
+
+        msg = EmailMessage()
+        msg['Subject'] = "New Login Alert - Job Workspace"
+        msg['From'] = sender_email
+        msg['To'] = user_email
+        msg.set_content(f"Hello {user_name},\n\nA new login was just detected on your Job Workspace account. If this was you, no further action is needed. If you did not authorize this login, please contact support immediately.\n\nBest Regards,\nJob Workspace Team")
+
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+    except Exception as e:
+        print(f"Failed to send login email: {e}")
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -123,6 +149,11 @@ def login():
             return jsonify({'error': 'Failed to create authentication token'}), 500
         
         cursor.close()
+        
+        # Send email notification asynchronously
+        if user['role'] in ['worker', 'provider']:
+            threading.Thread(target=send_login_email, args=(user['email'], user['name'])).start()
+        
         
         return jsonify({
             'message': 'Login successful',

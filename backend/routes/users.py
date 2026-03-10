@@ -16,7 +16,7 @@ def get_profile():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT id, name, email, phone, address, role, position, experience, is_new, created_at
+        SELECT id, name, email, phone, address, role, position, experience, is_new, profile_picture, skills, created_at
         FROM users WHERE id = %s
     """, (user['user_id'],))
     profile = cursor.fetchone()
@@ -40,6 +40,7 @@ def update_profile():
     address = data.get('address')
     position = data.get('position')
     experience = data.get('experience')
+    skills = data.get('skills')
     
     conn = get_db()
     cursor = conn.cursor()
@@ -47,14 +48,53 @@ def update_profile():
     # Update profile
     cursor.execute("""
         UPDATE users 
-        SET name = %s, email = %s, phone = %s, address = %s, position = %s, experience = %s, is_new = FALSE
+        SET name = %s, email = %s, phone = %s, address = %s, position = %s, experience = %s, skills = %s, is_new = FALSE
         WHERE id = %s
-    """, (name, email, phone, address, position, experience, user['user_id']))
+    """, (name, email, phone, address, position, experience, skills, user['user_id']))
     
     conn.commit()
     cursor.close()
     
     return jsonify({'message': 'Profile updated successfully'}), 200
+
+import time
+from werkzeug.utils import secure_filename
+
+@users_bp.route('/profile/upload_picture', methods=['POST'])
+def upload_profile_picture():
+    user = get_current_user()
+    if not user:
+        return jsonify({'error': 'Authentication required'}), 401
+        
+    if 'profile_picture' not in request.files:
+        return jsonify({'error': 'No profile_picture part in request'}), 400
+        
+    file = request.files['profile_picture']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+        
+    if file:
+        filename = secure_filename(file.filename)
+        unique_filename = f"{int(time.time())}_{user['user_id']}_{filename}"
+        
+        # Ensure directory exists (fallback just in case app.py didn't create during import)
+        import os
+        upload_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'uploads', 'profile_pics')
+        os.makedirs(upload_dir, exist_ok=True)
+        
+        filepath = os.path.join(upload_dir, unique_filename)
+        file.save(filepath)
+        
+        file_url = f"/uploads/profile_pics/{unique_filename}"
+        
+        # Update Database
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE users SET profile_picture = %s WHERE id = %s", (file_url, user['user_id']))
+        conn.commit()
+        cursor.close()
+        
+        return jsonify({'message': 'Profile picture updated successfully', 'file_url': file_url}), 200
 
 @users_bp.route('/workers', methods=['GET'])
 def get_all_workers():
@@ -77,6 +117,20 @@ def get_all_workers():
         ORDER BY u.created_at DESC
     """)
     workers = cursor.fetchall()
+    
+    requested_workers = set()
+    if user['role'] == 'provider':
+        cursor.execute("""
+            SELECT DISTINCT ja.worker_id 
+            FROM job_applications ja
+            JOIN job_posts jp ON ja.job_id = jp.id
+            WHERE jp.provider_id = %s
+        """, (user['user_id'],))
+        requested_workers = {row['worker_id'] for row in cursor.fetchall()}
+        
+    for w in workers:
+        w['is_requested'] = w['id'] in requested_workers
+
     cursor.close()
     
     return jsonify(workers), 200

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,19 +10,20 @@
     <style>
         /* --- Layout & Sidebar Styles --- */
         body {
-            background-color: #F3F4F6;
+            background-color: var(--bg);
             display: flex;
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: var(--font);
         }
 
         /* Sidebar */
         .sidebar {
             width: 260px;
-            background-color: #1F2937;
-            color: #E5E7EB;
+            background: var(--white);\r
+            border-right: 1px solid var(--slate-200);
+            
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -30,7 +31,7 @@
             bottom: 0;
             left: 0;
             z-index: 1000;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
         }
 
         .sidebar-brand {
@@ -39,9 +40,9 @@
             align-items: center;
             padding: 0 25px;
             font-size: 1.25rem;
-            font-weight: bold;
-            color: white;
-            border-bottom: 1px solid #374151;
+            font-weight: 800;
+            color: var(--slate-900);
+            border-bottom: 1px solid var(--slate-200);
             gap: 10px;
         }
 
@@ -55,24 +56,24 @@
         .sidebar-link {
             display: flex;
             align-items: center;
-            padding: 12px 25px;
-            color: #9CA3AF;
+            padding: 14px 25px;
+            color: #475569;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all var(--duration) var(--ease);
             font-weight: 500;
             border-left: 4px solid transparent;
             cursor: pointer;
         }
 
         .sidebar-link:hover {
-            background-color: #374151;
-            color: white;
+            background: var(--bg);
+            color: var(--slate-900);
         }
 
         .sidebar-link.active {
-            background-color: #374151;
-            color: white;
-            border-left-color: var(--primary-color);
+            background: #eff6ff;
+            color: var(--primary);
+            border-left-color: var(--primary);
         }
 
         .sidebar-link i {
@@ -82,7 +83,7 @@
 
         .sidebar-footer {
             padding: 20px 25px;
-            border-top: 1px solid #374151;
+            border-top: 1px solid var(--slate-200);
         }
 
         /* Main Content */
@@ -106,10 +107,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--white);
+            padding: 8px 16px;
+            border-radius: var(--r-full);
+            box-shadow: var(--shadow-sm);
         }
 
         .notification-bell {
@@ -123,21 +124,21 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            color: #4B5563;
+            color: var(--text-secondary);
             transition: 0.2s;
         }
 
         .notification-bell:hover {
-            background: #F3F4F6;
-            color: var(--primary-color);
+            background: var(--slate-100);
+            color: var(--primary);
         }
 
         .notification-badge {
             position: absolute;
             top: -2px;
             right: -2px;
-            background: #EF4444;
-            color: white;
+            background: var(--danger);
+            color: var(--slate-900);
             border-radius: 50%;
             width: 18px;
             height: 18px;
@@ -145,7 +146,7 @@
             align-items: center;
             justify-content: center;
             font-size: 0.7rem;
-            border: 2px solid #F3F4F6;
+            border: 2px solid var(--slate-100);
         }
 
         /* Dashboard Overview */
@@ -158,12 +159,12 @@
 
         .welcome-text h1 {
             font-size: 1.8rem;
-            color: #111827;
+            color: var(--text-primary);
             margin: 0;
         }
 
         .welcome-text p {
-            color: #6B7280;
+            color: var(--text-secondary);
             margin: 5px 0 0;
         }
 
@@ -177,33 +178,33 @@
 
         .section-header h2 {
             font-size: 1.5rem;
-            color: #111827;
+            color: var(--text-primary);
             margin: 0;
         }
 
         /* Job Cards */
         .job-card {
             background: white;
-            border-radius: 12px;
+            border-radius: var(--r-xl);
             padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border-left: 5px solid #4F46E5;
-            transition: transform 0.2s;
+            box-shadow: var(--shadow-card);
+            border-left: 4px solid var(--primary);
+            transition: all var(--duration) var(--ease);
         }
 
         .job-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-card-hover);
         }
 
         .job-card.status-rejected {
-            border-left-color: #EF4444;
+            border-left-color: var(--danger);
             opacity: 0.8;
         }
 
         .job-card.status-accepted {
-            border-left-color: #10B981;
+            border-left-color: var(--secondary);
         }
 
         .job-header {
@@ -216,14 +217,14 @@
         .job-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1F2937;
+            color: var(--text-primary);
             margin: 0;
         }
 
         .job-meta {
             display: flex;
             gap: 20px;
-            color: #6B7280;
+            color: var(--text-secondary);
             font-size: 0.9rem;
             margin-bottom: 15px;
             flex-wrap: wrap;
@@ -236,10 +237,10 @@
         }
 
         .job-desc {
-            color: #4B5563;
+            color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 20px;
-            border-bottom: 1px solid #F3F4F6;
+            border-bottom: 1px solid var(--slate-200);
             padding-bottom: 20px;
         }
 
@@ -250,34 +251,19 @@
         }
 
         /* Buttons & Badges */
-        .action-btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-            font-size: 0.9rem;
-        }
+        .action-btn { padding: 8px 18px; border-radius: 999px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.22s ease; font-size: 0.85rem; font-family: var(--font); }
 
-        .btn-primary-custom {
-            background-color: #4F46E5;
-            color: white;
-            box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
-        }
+        .btn-primary-custom { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); color: #fff; box-shadow: 0 2px 8px rgba(37,99,235,.28); }
 
         .btn-secondary-custom {
-            background-color: white;
+            background-color: var(--slate-900);
             color: #4F46E5;
             border: 1px solid #4F46E5;
         }
 
         .btn-chat {
             background-color: #10B981;
-            color: white;
+            color: var(--slate-900);
         }
 
         .badge {
@@ -290,7 +276,7 @@
 
         .badge-new {
             background-color: #10B981;
-            color: white;
+            color: var(--slate-900);
             margin-left: 10px;
             font-size: 0.7rem;
             padding: 2px 8px;
@@ -316,8 +302,8 @@
         .form-card {
             background: white;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-card);
             max-width: 700px;
         }
 
@@ -329,25 +315,17 @@
             display: block;
             margin-bottom: 5px;
             font-weight: 600;
-            color: #374151;
+            color: var(--text-primary);
         }
 
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #D1D5DB;
-            border-radius: 6px;
-            outline: none;
-        }
+        .form-control { width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-family: var(--font); font-size: 0.9rem; background: #f8fafc; color: var(--text-primary); outline: none; transition: all 0.22s ease; }
 
-        .form-control:focus {
-            border-color: var(--primary-color);
-        }
+        .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
 
         /* Review specific */
         .review-card {
             background: white;
-            border-radius: 10px;
+            border-radius: var(--r-xl);
             padding: 20px;
             margin-bottom: 15px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -426,21 +404,27 @@
     <main class="main-content">
 
         <div class="top-header">
+
+            <div id="google_translate_element" style="margin-right: 15px;"></div>
             <div class="notification-bell" onclick="showSection('notifications')">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
             </div>
 
-            <div class="user-pill">
-                <i class="fas fa-hard-hat" style="color: #6B7280; font-size: 1.2rem;"></i>
-                <span style="font-weight: 500; color: #374151; font-size: 0.9rem;">Skilled Worker</span>
+            <div class="user-pill" style="gap: 10px;">
+                <img id="headerProfilePic"
+                    src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%239CA3AF%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm0%203c1.66%200%203%201.34%203%203s-1.34%203-3%203-3-1.34-3-3%201.34-3%203-3zm0%2014.2c-2.5%200-4.71-1.28-6-3.22.03-1.99%204-3.08%206-3.08%201.99%200%205.97%201.09%206%203.08-1.29%201.94-3.5%203.22-6%203.22z%22%2F%3E%3C%2Fsvg%3E"
+                    style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: none;">
+                <i id="headerProfileIcon" class="fas fa-hard-hat" style="color: var(--text-secondary); font-size: 1.2rem;"></i>
+                <span id="headerUserName" style="font-weight: 500; color: var(--text-primary); font-size: 0.9rem;">Skilled
+                    Worker</span>
                 <span id="newWorkerBadge" class="badge badge-new" style="display:none;">NEW</span>
             </div>
         </div>
 
         <div class="dashboard-top">
             <div class="welcome-text">
-                <h1>Hello, Worker!</h1>
+                <h1 id="welcomeHeaderTitle">Hello, Worker!</h1>
                 <p>Find your next job opportunity or manage your applications.</p>
             </div>
         </div>
@@ -479,6 +463,18 @@
                 </div>
                 <div class="form-card">
                     <form id="profileForm">
+                        <div class="form-group"
+                            style="display: flex; flex-direction: column; align-items: center; margin-bottom: 25px;">
+                            <img id="profilePicPreview"
+                                src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%239CA3AF%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm0%203c1.66%200%203%201.34%203%203s-1.34%203-3%203-3-1.34-3-3%201.34-3%203-3zm0%2014.2c-2.5%200-4.71-1.28-6-3.22.03-1.99%204-3.08%206-3.08%201.99%200%205.97%201.09%206%203.08-1.29%201.94-3.5%203.22-6%203.22z%22%2F%3E%3C%2Fsvg%3E"
+                                style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #E5E7EB; cursor: pointer; transition: 0.2s;"
+                                onclick="document.getElementById('profilePictureInput').click()"
+                                onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <input type="file" id="profilePictureInput" accept="image/*" style="display: none;"
+                                onchange="uploadProfilePicture(event)">
+                            <small style="color: var(--text-secondary); margin-top: 10px;"><i class="fas fa-camera"></i> Click image
+                                to upload profile picture</small>
+                        </div>
                         <div class="form-group">
                             <label>Full Name</label>
                             <input type="text" id="profileName" required class="form-control">
@@ -502,11 +498,16 @@
                             </div>
                             <div class="form-group">
                                 <label>Experience (Years)</label>
-                                <input type="number" id="profileExperience" class="form-control">
+                                <input type="number" id="profileExperience" min="0" value="0" class="form-control">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label>Skills (e.g., Graphic Design, Time Management, React)</label>
+                            <textarea id="profileSkills" class="form-control" rows="2"
+                                placeholder="List your skills separated by commas"></textarea>
+                        </div>
                         <div style="text-align: right; margin-top: 20px;">
-                            <button type="submit" class="action-btn btn-primary-custom">Update Profile</button>
+                            <button type="submit" class="action-btn btn-primary-custom">Save Changes</button>
                         </div>
                     </form>
                 </div>
@@ -520,14 +521,15 @@
                     </button>
                 </div>
                 <div class="card"
-                    style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    style="background: white; border-radius: var(--r-xl); padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                     <div id="notificationsList"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <script src="../js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/main.js?v=2"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
@@ -595,7 +597,19 @@
                 let statusBadge = '';
 
                 if (job.has_applied) {
-                    if (job.application_status === 'accepted') {
+                    if (job.application_status === 'invited') {
+                        statusBadge = `<span class="badge" style="background-color: #DBEAFE; color: #1E3A8A;">Invited</span>`;
+                        btn = `
+                            <div style="display: flex; gap: 10px;">
+                                <button class="action-btn" style="background-color: #10B981; color: var(--slate-900);" onclick="respondInvite(${job.id}, 'accepted')">
+                                    <i class="fas fa-check"></i> Accept
+                                </button>
+                                <button class="action-btn" style="background: var(--danger); color: var(--slate-900);" onclick="respondInvite(${job.id}, 'rejected')">
+                                    <i class="fas fa-times"></i> Decline
+                                </button>
+                            </div>
+                        `;
+                    } else if (job.application_status === 'accepted') {
                         statusBadge = `<span class="badge badge-accepted">Accepted</span>`;
                         btn = `<button class="action-btn btn-chat" onclick="openMessages(${job.id}, ${job.provider_id}, '${job.provider_name}')">
                                 <i class="fas fa-comments"></i> Message Provider
@@ -611,6 +625,13 @@
                     btn = `<button class="action-btn btn-primary-custom" onclick="applyForJob(${job.id})">Apply Now</button>`;
                 }
 
+                let requiredSkillsHTML = '';
+                if (job.required_skills && job.required_skills.trim() !== '') {
+                    requiredSkillsHTML = `<p style="margin: 10px 0 15px 0; font-size: 0.9rem; color: #4F46E5; background: #EEF2FF; padding: 8px 12px; border-radius: var(--r-sm); display: inline-block;"><strong><i class="fas fa-laptop-code"></i> Required Skills:</strong> ${job.required_skills}</p>`;
+                } else {
+                    requiredSkillsHTML = `<p style="margin: 10px 0 15px 0; font-size: 0.9rem; color: #9CA3AF;"><strong><i class="fas fa-laptop-code"></i> Required Skills:</strong> Not specified</p>`;
+                }
+
                 div.innerHTML = `
                     <div class="job-header">
                         <h3 class="job-title">${job.title}</h3>
@@ -622,8 +643,9 @@
                         <span><i class="fas fa-dollar-sign"></i> ${formatCurrency(job.salary)}</span>
                         <span><i class="fas fa-clock"></i> ${job.duration || 'N/A'}</span>
                     </div>
-                    <div class="job-desc">${job.description}</div>
-                    <div class="job-footer">
+                    <div class="job-desc" style="margin-bottom: 5px; border-bottom: none; padding-bottom: 0;">${job.description}</div>
+                    ${requiredSkillsHTML}
+                    <div class="job-footer" style="border-top: 1px solid #F3F4F6; padding-top: 15px;">
                         <span style="font-size:0.8rem; color:#9CA3AF;">Posted: ${formatDate(job.created_at).split(',')[0]}</span>
                         ${btn}
                     </div>
@@ -678,10 +700,56 @@
                 document.getElementById('profileAddress').value = profile.address || '';
                 document.getElementById('profilePosition').value = profile.position || '';
                 document.getElementById('profileExperience').value = profile.experience || 0;
+                if (document.getElementById('profileSkills')) document.getElementById('profileSkills').value = profile.skills || '';
 
                 const badge = document.getElementById('newWorkerBadge');
                 if (badge) badge.style.display = profile.is_new ? 'inline-block' : 'none';
+
+                if (document.getElementById('headerUserName') && profile.name) {
+                    document.getElementById('headerUserName').textContent = profile.name;
+                    if (document.getElementById('welcomeHeaderTitle')) {
+                        document.getElementById('welcomeHeaderTitle').textContent = 'Hello, ' + profile.name.split(' ')[0] + '!';
+                    }
+                }
+
+                if (profile.profile_picture) {
+                    const picUrl = 'http://localhost:5000' + profile.profile_picture;
+                    if (document.getElementById('headerProfilePic')) {
+                        document.getElementById('headerProfilePic').src = picUrl;
+                        document.getElementById('headerProfilePic').style.display = 'block';
+                        document.getElementById('headerProfileIcon').style.display = 'none';
+                    }
+                    if (document.getElementById('profilePicPreview')) {
+                        document.getElementById('profilePicPreview').src = picUrl;
+                    }
+                }
             } catch (error) { console.error(error); }
+        }
+
+        async function uploadProfilePicture(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('profile_picture', file);
+
+            try {
+                showAlert('Uploading picture...', 'info');
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/profile/upload_picture', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Upload failed');
+
+                showAlert('Profile picture updated!', 'success');
+                loadProfileData();
+            } catch (err) {
+                showAlert(err.message, 'error');
+            }
         }
 
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
@@ -694,7 +762,8 @@
                         phone: document.getElementById('profilePhone').value,
                         address: document.getElementById('profileAddress').value,
                         position: document.getElementById('profilePosition').value,
-                        experience: document.getElementById('profileExperience').value
+                        experience: document.getElementById('profileExperience').value,
+                        skills: document.getElementById('profileSkills') ? document.getElementById('profileSkills').value : ''
                     })
                 });
                 showAlert('Profile updated successfully', 'success');
@@ -728,6 +797,46 @@
             } catch (e) { }
         }
 
+        async function respondInvite(jobId, status) {
+            const isAccepting = status === 'accepted';
+            const result = await Swal.fire({
+                title: isAccepting ? 'Accept Job Invitation?' : 'Decline Job Invitation?',
+                text: isAccepting
+                    ? 'You will be committed to this job. The provider will be notified.'
+                    : 'The provider will be notified that you declined.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: isAccepting ? '#10b981' : '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: isAccepting ? 'Yes, Accept It!' : 'Yes, Decline It',
+                cancelButtonText: 'Go Back'
+            });
+
+            if (!result.isConfirmed) return;
+
+            try {
+                await apiRequest(`/jobs/${jobId}/respond-invite`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status })
+                });
+
+                // Show success toast then refresh the list so buttons disappear
+                await Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: isAccepting ? 'Invitation accepted! 🎉' : 'Invitation declined.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+
+                loadApplications(); // Re-renders cards — buttons gone, badge updated
+            } catch (e) {
+                showAlert(e.message, 'error');
+            }
+        }
+
         // MISSING FUNCTION ADDED HERE
         async function markAllAsRead() {
             try {
@@ -743,6 +852,19 @@
             window.location.href = 'login.html';
         }
     </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

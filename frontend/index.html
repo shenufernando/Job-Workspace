@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,48 +8,53 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Homepage specific styles */
-        .hero {
-            background: linear-gradient(rgba(79, 70, 229, 0.9), rgba(124, 58, 237, 0.8)), url('https://images.unsplash.com/photo-1581578731117-104f2a8d23e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 150px 0 100px;
-        }
-
-        .step-card {
-            text-align: center;
-            padding: 20px;
-            transition: transform 0.3s;
-        }
-
-        .step-card:hover {
-            transform: translateY(-5px);
-        }
-
+        /* ── Homepage-specific layout helpers ── */
         .step-icon {
             width: 60px;
             height: 60px;
-            background: #EEF2FF;
-            color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 1.5rem;
+            margin: 0 auto 18px;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, .35);
+            transition: transform 0.3s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .step-card:hover .step-icon {
+            transform: scale(1.12) rotate(-5deg);
         }
 
         .stats-section {
-            background: var(--dark-color);
-            color: white;
-            padding: 60px 0;
+            background: var(--slate-900);
+            padding: 64px 0;
             text-align: center;
         }
 
+        .stats-section .features-grid {
+            color: var(--white);
+        }
+
+        .stats-section p {
+            color: var(--slate-400);
+            font-size: 0.88rem;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            font-weight: 500;
+        }
+
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--secondary-color);
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--primary-mid) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
 </head>
@@ -66,13 +71,10 @@
                 <a href="pages/about.html" class="nav-link">About</a>
                 <a href="pages/services.html" class="nav-link">Services</a>
                 <a href="pages/contact.html" class="nav-link">Contact</a>
+                <a href="pages/user-manual.html" class="nav-link">User Manual</a>
 
                 <div class="language-selector">
-                    <select id="languageSelect" onchange="changeLanguage()">
-                        <option value="en">English</option>
-                        <option value="si">සිංහල</option>
-                        <option value="ta">தமிழ்</option>
-                    </select>
+                    <div id="google_translate_element"></div>
                 </div>
 
                 <div id="authLinks" style="display: flex; gap: 15px; align-items: center;">
@@ -86,20 +88,37 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1 data-i18n="hero.title">The Easiest Way to Find Skilled Workers</h1>
-                <p data-i18n="hero.subtitle"
-                    style="font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                    Connect with reliable electricians, plumbers, masons, and more. Or find your next job opportunity
-                    today.
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    Now Available Across Sri Lanka
+                </div>
+                <h1 data-i18n="hero.title">The Smartest Way to Find <span class="gradient-word">Skilled Workers</span>
+                </h1>
+                <p data-i18n="hero.subtitle">
+                    Connect with reliable electricians, plumbers, masons, and more — powered by AI matching.
+                    Or discover your next career opportunity today.
                 </p>
                 <div class="hero-buttons">
-                    <a href="pages/signup.html?role=provider" class="btn btn-primary btn-large"
-                        style="background: white; color: var(--primary-color);">
+                    <a href="pages/signup.html?role=provider" class="btn btn-primary btn-large">
                         <i class="fas fa-search"></i> Post a Job
                     </a>
-                    <a href="pages/signup.html?role=worker" class="btn btn-secondary btn-large">
+                    <a href="pages/signup.html?role=worker" class="btn btn-ghost btn-large">
                         <i class="fas fa-hammer"></i> Find Work
                     </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-number">500+</span>
+                        <span class="hero-stat-label">Skilled Workers</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-number">1,200+</span>
+                        <span class="hero-stat-label">Jobs Completed</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-number">4.8 / 5</span>
+                        <span class="hero-stat-label">Average Rating</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -152,7 +171,7 @@
         </div>
     </section>
 
-    <section class="features" style="background: #f9fafb;">
+    <section class="features" style="background: var(--bg);">
         <div class="container">
             <h2 class="section-title" data-i18n="features.title">Why Choose Job Workspace?</h2>
             <div class="features-grid">
@@ -189,10 +208,11 @@
                     <a href="pages/about.html">About</a>
                     <a href="pages/services.html">Services</a>
                     <a href="pages/contact.html">Contact</a>
+                    <a href="pages/user-manual.html">User Manual</a>
                 </div>
                 <div class="footer-section">
                     <h4 data-i18n="footer.contact">Contact</h4>
-                    <p><i class="fas fa-envelope"></i> info@jobworkspace.com</p>
+                    <p><i class="fas fa-envelope"></i> jobworkspace123@gmail.com</p>
                     <p><i class="fas fa-phone"></i> +94 11 234 5678</p>
                 </div>
             </div>
@@ -201,8 +221,7 @@
             </div>
         </div>
     </footer>
-
-    <script src="js/i18n.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/main.js"></script>
     <script>
         // Check Auth State and Update Navbar
@@ -234,6 +253,19 @@
             window.location.reload();
         }
     </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

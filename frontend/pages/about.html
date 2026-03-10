@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,23 +11,70 @@
         .about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 50px;
+            gap: 56px;
             align-items: center;
-            margin-bottom: 60px;
+            margin-bottom: 72px;
+            padding-top: 64px;
         }
 
         @media(max-width: 768px) {
             .about-grid {
                 grid-template-columns: 1fr;
+                gap: 32px;
             }
         }
 
+        .about-grid img {
+            border-radius: var(--r-2xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .about-grid h1 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 20px;
+        }
+
+        .about-grid p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 72px;
+        }
+
         .mission-card {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            border-top: 4px solid var(--primary-color);
+            background: var(--white);
+            padding: 32px;
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--primary);
+            transition: all var(--duration-slow) var(--ease);
+        }
+
+        .mission-card.accent {
+            border-top-color: var(--secondary);
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .mission-card i {
+            margin-bottom: 16px;
+        }
+
+        .page-section {
+            padding-bottom: 80px;
         }
     </style>
 </head>
@@ -36,8 +83,7 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <a href="../index.html"
-                    style="text-decoration:none; color:inherit; display:flex; gap:10px; align-items:center;">
+                <a href="../index.html" style="text-decoration:none;display:flex;gap:10px;align-items:center;">
                     <i class="fas fa-briefcase"></i>
                     <span>Job Workspace</span>
                 </a>
@@ -47,48 +93,46 @@
                 <a href="about.html" class="nav-link active">About</a>
                 <a href="services.html" class="nav-link">Services</a>
                 <a href="contact.html" class="nav-link">Contact</a>
+
+                <div class="language-selector">
+                    <div id="google_translate_element"></div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container" style="padding: 60px 20px;">
+    <div class="container page-section">
         <div class="about-grid">
             <div>
-                <h1 style="font-size: 2.5rem; margin-bottom: 20px; color: var(--dark-color);">Empowering the Informal
-                    Workforce</h1>
-                <p style="font-size: 1.1rem; color: #666; margin-bottom: 20px; line-height: 1.8;">
-                    Job Workspace is Sri Lanka's premier multilingual platform bridging the gap between skilled
-                    daily-wage workers and households or businesses needing their services.
-                </p>
-                <p style="font-size: 1.1rem; color: #666; line-height: 1.8;">
-                    We believe that everyone deserves fair access to work opportunities. By leveraging technology, we
-                    are formalizing the informal sector, providing dignity, security, and consistent income for workers.
-                </p>
+                <h1>Empowering the Informal Workforce</h1>
+                <p>Job Workspace is Sri Lanka's premier multilingual platform bridging the gap between skilled
+                    daily-wage workers and households or businesses needing their services.</p>
+                <p>We believe that everyone deserves fair access to work opportunities. By leveraging technology, we are
+                    formalizing the informal sector, providing dignity, security, and consistent income for workers.</p>
             </div>
             <div>
                 <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                    alt="Construction Team"
-                    style="width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    alt="Construction Team">
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+        <div class="mission-grid">
             <div class="mission-card">
-                <i class="fas fa-bullseye fa-2x" style="color: var(--primary-color); margin-bottom: 15px;"></i>
+                <i class="fas fa-bullseye fa-2x" style="color: var(--primary);"></i>
                 <h2>Our Mission</h2>
                 <p>To create a seamless, transparent, and secure ecosystem where skilled workers can easily find
                     employment and job providers can hire with confidence.</p>
             </div>
-            <div class="mission-card" style="border-top-color: var(--secondary-color);">
-                <i class="fas fa-eye fa-2x" style="color: var(--secondary-color); margin-bottom: 15px;"></i>
+            <div class="mission-card accent">
+                <i class="fas fa-eye fa-2x" style="color: var(--secondary);"></i>
                 <h2>Our Vision</h2>
                 <p>To be the leading digital platform for informal employment in South Asia, fostering economic growth
                     and improving the livelihoods of millions.</p>
             </div>
         </div>
 
-        <div style="margin-top: 60px;">
-            <h2 style="text-align: center; margin-bottom: 40px;">What Sets Us Apart</h2>
+        <div>
+            <h2 class="section-title">What Sets Us Apart</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <i class="fas fa-language"></i>
@@ -116,7 +160,7 @@
             </div>
         </div>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../js/main.js"></script>
     <script>
         // Basic Auth Check for Nav
@@ -146,6 +190,19 @@
             }
         });
     </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

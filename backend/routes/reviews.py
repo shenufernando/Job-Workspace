@@ -52,6 +52,11 @@ def create_review():
         VALUES (%s, %s, %s, %s, %s)
     """, (job_id, worker_id, user['user_id'], rating, comment))
     
+    # --- 🔥 NEW BADGE FIX (SQL UPDATE) ---
+    # Review එකක් වැටුණු ගමන් Worker ගේ 'is_new' එක 0 (False) කරනවා.
+    cursor.execute("UPDATE users SET is_new = 0 WHERE id = %s", (worker_id,))
+    # -------------------------------------
+
     # Notify worker
     cursor.execute("""
         INSERT INTO notifications (user_id, type, title, message, related_id)

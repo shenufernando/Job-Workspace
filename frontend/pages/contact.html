@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,11 +8,15 @@
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        .contact-page {
+            padding: 64px 0;
+        }
+
         .contact-layout {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 40px;
-            margin-top: 30px;
+            gap: 32px;
+            margin-top: 36px;
         }
 
         @media(max-width: 768px) {
@@ -22,18 +26,19 @@
         }
 
         .info-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background: var(--white);
+            padding: 28px;
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
             height: fit-content;
         }
 
         .info-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 14px;
+            margin-bottom: 22px;
         }
 
         .info-item:last-child {
@@ -41,15 +46,17 @@
         }
 
         .icon-box {
-            width: 45px;
-            height: 45px;
-            background: #EEF2FF;
-            color: var(--primary-color);
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--white);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px var(--primary-glow);
         }
     </style>
 </head>
@@ -58,8 +65,7 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <a href="../index.html"
-                    style="text-decoration:none; color:inherit; display:flex; gap:10px; align-items:center;">
+                <a href="../index.html" style="text-decoration:none;display:flex;gap:10px;align-items:center;">
                     <i class="fas fa-briefcase"></i>
                     <span>Job Workspace</span>
                 </a>
@@ -69,19 +75,23 @@
                 <a href="about.html" class="nav-link">About</a>
                 <a href="services.html" class="nav-link">Services</a>
                 <a href="contact.html" class="nav-link active">Contact</a>
+
+                <div class="language-selector">
+                    <div id="google_translate_element"></div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container" style="padding: 60px 20px;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h1 style="font-size: 2.5rem; color: var(--dark-color);">Get in Touch</h1>
-            <p style="color: #666;">Have questions? We'd love to hear from you.</p>
+    <div class="container contact-page">
+        <div style="text-align:center; margin-bottom:40px;">
+            <h1 class="section-title">Get in Touch</h1>
+            <p class="section-subtitle">Have questions? We'd love to hear from you.</p>
         </div>
 
         <div class="contact-layout">
-            <div class="form-container" style="margin: 0; max-width: 100%;">
-                <h2 style="margin-bottom: 20px;">Send us a Message</h2>
+            <div class="form-container" style="margin:0; max-width:100%;">
+                <h2 style="margin-bottom:20px;">Send us a Message</h2>
                 <form id="contactForm">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div class="form-group">
@@ -111,21 +121,21 @@
                         <div class="icon-box"><i class="fas fa-envelope"></i></div>
                         <div>
                             <h4 style="margin:0;">Email</h4>
-                            <p style="margin:0; color:#666;">support@jobworkspace.com</p>
+                            <p style="margin:0; color: var(--text-secondary);">jobworkspace123@gmail.com</p>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="icon-box"><i class="fas fa-phone"></i></div>
                         <div>
                             <h4 style="margin:0;">Phone</h4>
-                            <p style="margin:0; color:#666;">+94 11 234 5678</p>
+                            <p style="margin:0; color: var(--text-secondary);">+94 11 234 5678</p>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
                         <div>
                             <h4 style="margin:0;">Office</h4>
-                            <p style="margin:0; color:#666;">Colombo 03, Sri Lanka</p>
+                            <p style="margin:0; color: var(--text-secondary);">Colombo 03, Sri Lanka</p>
                         </div>
                     </div>
                 </div>
@@ -148,7 +158,7 @@
             </div>
         </div>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../js/main.js"></script>
     <script>
         // Auth Logic for Nav
@@ -173,6 +183,19 @@
             document.getElementById('contactForm').reset();
         });
     </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

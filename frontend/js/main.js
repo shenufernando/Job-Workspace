@@ -55,6 +55,10 @@ async function apiRequest(endpoint, options = {}) {
         ...options.headers
     };
 
+    if (options.body instanceof FormData) {
+        delete headers['Content-Type'];
+    }
+
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
@@ -80,7 +84,7 @@ async function apiRequest(endpoint, options = {}) {
 
         return data;
     } catch (error) {
-        console.error('API Error:', error);
+        //    console.error('API Error:', error);
         throw error;
     }
 }
@@ -88,36 +92,34 @@ async function apiRequest(endpoint, options = {}) {
 // --- UI Helpers ---
 
 function showAlert(message, type = 'info') {
-    // Check if alert already exists to prevent stacking too many
-    const existingAlert = document.querySelector('.alert-fixed');
-    if (existingAlert) existingAlert.remove();
+    // Map legacy type names to SweetAlert2 icons
+    const iconMap = { success: 'success', error: 'error', warning: 'warning', info: 'info' };
+    const icon = iconMap[type] || 'info';
 
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-fixed`;
-    alertDiv.textContent = message;
-
-    // Inline styles for floating alert
-    alertDiv.style.position = 'fixed';
-    alertDiv.style.top = '20px';
-    alertDiv.style.right = '20px';
-    alertDiv.style.padding = '15px 25px';
-    alertDiv.style.borderRadius = '8px';
-    alertDiv.style.color = 'white';
-    alertDiv.style.zIndex = '5000'; // High z-index to show over modals
-    alertDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-    alertDiv.style.fontWeight = '500';
-    alertDiv.style.animation = 'slideIn 0.3s ease-out';
-
-    if (type === 'success') alertDiv.style.backgroundColor = '#10B981';
-    else if (type === 'error') alertDiv.style.backgroundColor = '#EF4444';
-    else alertDiv.style.backgroundColor = '#3B82F6';
-
-    document.body.appendChild(alertDiv);
-
-    setTimeout(() => {
-        alertDiv.style.animation = 'fadeOut 0.3s ease-in';
-        setTimeout(() => alertDiv.remove(), 300);
-    }, 4000);
+    if (type === 'success' || type === 'info') {
+        // Non-blocking toast for positive feedback
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: icon,
+            title: message,
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            customClass: { popup: 'swal-toast-custom' }
+        });
+    } else {
+        // Centered modal for errors and warnings that need attention
+        const titleMap = { error: 'Error', warning: 'Warning' };
+        Swal.fire({
+            title: titleMap[type] || 'Notice',
+            text: message,
+            icon: icon,
+            confirmButtonColor: '#6366f1',
+            confirmButtonText: 'OK',
+            customClass: { popup: 'swal-modal-custom' }
+        });
+    }
 }
 
 function formatDate(dateString) {
@@ -139,6 +141,11 @@ let currentChatJobId = null;
 let currentChatReceiverId = null;
 let chatRefreshInterval = null;
 
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let selectedImageFile = null;
+
 async function openMessages(jobId, receiverId, receiverName) {
     currentChatJobId = jobId;
     currentChatReceiverId = receiverId;
@@ -146,30 +153,59 @@ async function openMessages(jobId, receiverId, receiverName) {
     // 1. Inject Modal HTML if not present
     if (!document.getElementById('chatModal')) {
         const modalHtml = `
-            <div id="chatModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
-                <div class="modal-content" style="background: white; width: 95%; max-width: 500px; height: 600px; display: flex; flex-direction: column; border-radius: 12px; box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden;">
-                    <div class="modal-header" style="background: #4F46E5; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; color: white;">
+            <div id="chatModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.45); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(6px);">
+                <div class="modal-content" style="background: white; width: 95%; max-width: 500px; height: 600px; display: flex; flex-direction: column; border-radius: 20px; box-shadow: 0 24px 48px rgba(0,0,0,0.14); overflow: hidden;">
+                    
+                    <!-- Chat Header: clean white, dark text -->
+                    <div style="background: #fff; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; flex-shrink: 0;">
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-user" style="font-size: 1.2rem;"></i>
+                            <div style="width: 42px; height: 42px; background: #eff6ff; border: 2px solid #bfdbfe; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #2563eb;">
+                                <i class="fas fa-user"></i>
                             </div>
                             <div>
-                                <h2 id="chatReceiverName" style="font-size: 1.1rem; margin: 0; font-weight: 600;">User</h2>
-                                <small id="chatJobTitle" style="opacity: 0.9; font-size: 0.8rem;">Job Chat</small>
+                                <h2 id="chatReceiverName" style="font-size: 1rem; margin: 0; font-weight: 700; color: #0f172a;">User</h2>
+                                <small id="chatJobTitle" style="color: #64748b; font-size: 0.78rem;">Job Chat</small>
                             </div>
                         </div>
-                        <button onclick="closeChatModal()" style="background: none; border: none; color: white; font-size: 2rem; cursor: pointer; line-height: 1;">&times;</button>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <button onclick="startCall('audio')" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Audio Call">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button onclick="startCall('video')" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Video Call">
+                                <i class="fas fa-video"></i>
+                            </button>
+                            <button onclick="closeChatModal()" style="background: #f1f5f9; border: 1px solid #e2e8f0; color: #64748b; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; line-height: 1;">&times;</button>
+                        </div>
                     </div>
                     
-                    <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; background: #f3f4f6;">
-                        <div style="text-align: center; margin-top: 50px; color: #9ca3af;">Loading messages...</div>
+                    <!-- Message area -->
+                    <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; background: #f8fafc;">
+                        <div style="text-align: center; margin-top: 50px; color: #94a3b8; font-size: 0.9rem;">Loading messages...</div>
                     </div>
 
-                    <form onsubmit="sendMessage(event)" style="padding: 15px; background: white; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; align-items: center;">
-                        <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off" required 
-                            style="flex: 1; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 25px; outline: none; transition: border 0.2s;">
-                        <button type="submit" style="background: #4F46E5; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.1s;">
-                            <i class="fas fa-paper-plane"></i>
+                    <!-- Input Area -->
+                    <form id="chatForm" onsubmit="sendMessage(event)" style="padding: 12px 16px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center; flex-shrink: 0;">
+                        <button type="button" onclick="document.getElementById('imageUploadInput').click()" style="background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; transition: color 0.2s; flex-shrink: 0;" title="Attach">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+                        
+                        <div id="imagePreviewContainer" style="display: none; position: relative; flex-shrink: 0;">
+                            <img id="imagePreview" src="" style="height: 40px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                            <button type="button" onclick="clearSelectedImage()" style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
+                        </div>
+
+                        <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off" 
+                            style="flex: 1; padding: 11px 18px; border: 1.5px solid #e2e8f0; border-radius: 999px; outline: none; font-family: inherit; font-size: 0.9rem; background: #f8fafc; color: #0f172a; transition: border-color 0.2s, box-shadow 0.2s;"
+                            onfocus="this.style.borderColor='#2563eb'; this.style.boxShadow='0 0 0 3px rgba(37,99,235,.10)'; this.style.background='#fff';"
+                            onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow=''; this.style.background='#f8fafc';">
+                            
+                        <button type="button" id="recordButton" onclick="toggleRecording()" style="background: none; border: none; color: #94a3b8; font-size: 1.1rem; cursor: pointer; flex-shrink: 0;" title="Voice message">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+
+                        <button type="submit" style="background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(37,99,235,.30); transition: transform 0.15s, box-shadow 0.15s; flex-shrink: 0;">
+                            <i class="fas fa-paper-plane" style="font-size: 0.92rem;"></i>
                         </button>
                     </form>
                 </div>
@@ -196,10 +232,10 @@ async function openMessages(jobId, receiverId, receiverName) {
 }
 
 async function loadMessages() {
-    if (!currentChatJobId) return;
+    if (!currentChatJobId || !currentChatReceiverId) return;
 
     try {
-        const messages = await apiRequest(`/messages/job/${currentChatJobId}`);
+        const messages = await apiRequest(`/messages/job/${currentChatJobId}/${currentChatReceiverId}`);
         const chatBox = document.getElementById('chatMessages');
         const currentUser = getCurrentUser();
 
@@ -225,23 +261,35 @@ async function loadMessages() {
             bubble.style.lineHeight = '1.4';
 
             if (isMe) {
+                // Sent: Royal Blue, iMessage-style tail bottom-right
                 bubble.style.alignSelf = 'flex-end';
-                bubble.style.backgroundColor = '#4F46E5'; // Primary Color
+                bubble.style.background = 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)';
                 bubble.style.color = 'white';
-                bubble.style.borderBottomRightRadius = '4px';
+                bubble.style.borderRadius = '18px 18px 4px 18px';
+                bubble.style.boxShadow = '0 2px 8px rgba(37,99,235,.28)';
             } else {
+                // Received: canvas gray, tail bottom-left
                 bubble.style.alignSelf = 'flex-start';
-                bubble.style.backgroundColor = 'white';
-                bubble.style.color = '#1f2937';
-                bubble.style.borderBottomLeftRadius = '4px';
-                bubble.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
-                bubble.style.border = '1px solid #e5e7eb';
+                bubble.style.backgroundColor = '#f1f5f9';
+                bubble.style.color = '#0f172a';
+                bubble.style.borderRadius = '18px 18px 18px 4px';
+                bubble.style.border = '1px solid #e2e8f0';
             }
 
             const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+            let contentHtml = '';
+            if (msg.message_type === 'image') {
+                contentHtml = `<img src="${API_BASE_URL.replace('/api', '')}/${msg.file_url}" style="max-width: 100%; border-radius: 8px; margin-bottom: 5px;">`;
+                if (msg.message) contentHtml += `<div>${msg.message}</div>`;
+            } else if (msg.message_type === 'audio') {
+                contentHtml = `<audio controls src="${API_BASE_URL.replace('/api', '')}/${msg.file_url}"></audio>`;
+            } else {
+                contentHtml = `<div>${msg.message}</div>`;
+            }
+
             bubble.innerHTML = `
-                <div>${msg.message}</div>
+                ${contentHtml}
                 <div style="font-size: 0.7rem; text-align: right; margin-top: 4px; opacity: ${isMe ? '0.8' : '0.5'};">
                     ${time}
                 </div>
@@ -257,28 +305,110 @@ async function loadMessages() {
     }
 }
 
+function handleImageSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        selectedImageFile = file;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('imagePreview').src = e.target.result;
+            document.getElementById('imagePreviewContainer').style.display = 'block';
+            document.getElementById('messageInput').style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function clearSelectedImage() {
+    selectedImageFile = null;
+    document.getElementById('imageUploadInput').value = '';
+    document.getElementById('imagePreviewContainer').style.display = 'none';
+    document.getElementById('messageInput').style.display = 'block';
+}
+
+async function toggleRecording() {
+    const recordBtn = document.getElementById('recordButton');
+
+    if (!isRecording) {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = e => {
+                if (e.data && e.data.size > 0) {
+                    audioChunks.push(e.data);
+                }
+            };
+
+            mediaRecorder.onstop = async () => {
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+                await sendMediaMessage(audioBlob, 'audio');
+            };
+
+            audioChunks = [];
+            mediaRecorder.start(250);
+            isRecording = true;
+            recordBtn.style.color = '#ef4444';
+            document.getElementById('messageInput').placeholder = "Recording... Click mic to send.";
+            document.getElementById('messageInput').disabled = true;
+        } catch (err) {
+            showAlert("Microphone access denied or not available.", "error");
+        }
+    } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        recordBtn.style.color = '#6b7280';
+        document.getElementById('messageInput').placeholder = "Type a message...";
+        document.getElementById('messageInput').disabled = false;
+    }
+}
+
+async function sendMediaMessage(blob, type) {
+    try {
+        const formData = new FormData();
+        formData.append('job_id', currentChatJobId);
+        formData.append('receiver_id', currentChatReceiverId);
+        formData.append(type, blob, type === 'audio' ? 'voice_message.webm' : blob.name);
+
+        await apiRequest('/messages', {
+            method: 'POST',
+            body: formData
+        });
+        loadMessages();
+    } catch (error) {
+        showAlert("Failed to send " + type + ": " + error.message, 'error');
+    }
+}
+
 async function sendMessage(e) {
     e.preventDefault();
+
+    if (selectedImageFile) {
+        await sendMediaMessage(selectedImageFile, 'image');
+        clearSelectedImage();
+        return;
+    }
+
     const input = document.getElementById('messageInput');
     const text = input.value.trim();
 
     if (!text) return;
 
     try {
-        // Optimistic UI: Clear input immediately
         input.value = '';
+
+        const formData = new FormData();
+        formData.append('job_id', currentChatJobId);
+        formData.append('receiver_id', currentChatReceiverId);
+        formData.append('message', text);
 
         await apiRequest('/messages', {
             method: 'POST',
-            body: JSON.stringify({
-                job_id: currentChatJobId,
-                receiver_id: currentChatReceiverId,
-                message: text
-            })
+            body: formData
         });
 
-        loadMessages(); // Refresh to show sent message/timestamp from server
-
+        loadMessages();
     } catch (error) {
         showAlert("Failed to send: " + error.message, 'error');
     }
@@ -292,3 +422,106 @@ function closeChatModal() {
     currentChatJobId = null;
     currentChatReceiverId = null;
 }
+
+// --- JITSI MEETS CALLING LOGIC ---
+async function startCall(callType) {
+    if (!currentChatJobId || !currentChatReceiverId) return;
+
+    const currentUser = getCurrentUser();
+
+    // Generate unique room name based on Job ID and User IDs
+    const roomName = 'JobWorkspace_Job' + currentChatJobId + '_User' + Math.min(currentUser.id, currentChatReceiverId) + '_' + Math.max(currentUser.id, currentChatReceiverId);
+
+    // Send automated text message notification
+    let notificationText = callType === 'audio'
+        ? `📞 ${currentUser.name} is requesting an Audio Call. Please click the 📞 (Phone) icon at the top to join.`
+        : `📹 ${currentUser.name} is requesting a Video Call. Please click the 📹 (Video) icon at the top to join.`;
+
+    try {
+        const formData = new FormData();
+        formData.append('job_id', currentChatJobId);
+        formData.append('receiver_id', currentChatReceiverId);
+        formData.append('message', notificationText);
+
+        await apiRequest('/messages', {
+            method: 'POST',
+            body: formData
+        });
+        loadMessages();
+    } catch (e) {
+        console.error("Failed to send call notification:", e);
+    }
+
+    const iframeUrl = callType === 'audio' ? `https://meet.jit.si/${roomName}#config.startWithVideoMuted=true` : `https://meet.jit.si/${roomName}`;
+
+    // Create and inject Call Modal Overlay
+    if (!document.getElementById('jitsiCallModal')) {
+        const modalHtml = `
+            <div id="jitsiCallModal" class="modal-overlay" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 4000; flex-direction: column;">
+                <div style="background: #1f2937; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: white;">
+                    <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;"><i class="fas fa-${callType === 'audio' ? 'phone' : 'video'}"></i> Active Call</h3>
+                    <button onclick="endCall()" style="background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">End Call</button>
+                </div>
+                <div style="flex: 1; width: 100%;">
+                    <iframe src="${iframeUrl}" allow="camera; microphone; fullscreen; display-capture" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+}
+
+function endCall() {
+    const callModal = document.getElementById('jitsiCallModal');
+    if (callModal) {
+        callModal.remove();
+    }
+}
+
+async function inviteWorkerFromMatch(jobId, workerId, buttonElement) {
+    if (!jobId || !workerId) return;
+
+    buttonElement.disabled = true;
+    const originalText = buttonElement.innerHTML;
+    buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Inviting...';
+
+    try {
+        await apiRequest(`/jobs/${jobId}/invite/${workerId}`, { method: 'POST' });
+
+        buttonElement.innerHTML = '<i class="fas fa-check"></i> Requested';
+        buttonElement.style.backgroundColor = '#10B981';
+        buttonElement.style.color = '#ffffff';
+        buttonElement.style.borderColor = '#10B981';
+        buttonElement.classList.remove('btn-secondary');
+    } catch (e) {
+        buttonElement.disabled = false;
+        buttonElement.innerHTML = originalText;
+        showAlert(e.message, 'error');
+    }
+}
+
+// --- Global Google Translate Cookie Fix ---
+// Google sets the 'googtrans' cookie per directory level (e.g., /pages/). 
+// This forces the translation cookie to the root '/' so the selected language persists globally.
+document.addEventListener('DOMContentLoaded', () => {
+    // Function to get a specific cookie
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    };
+
+    // Function to set the cookie forcefully onto the root domain
+    const setGlobalCookie = (name, value) => {
+        document.cookie = `${name}=${value}; path=/; domain=${window.location.hostname};`;
+    };
+
+    // Periodically sync the googtrans cookie to the root path natively
+    setInterval(() => {
+        const transCookie = getCookie('googtrans');
+        if (transCookie) {
+            setGlobalCookie('googtrans', transCookie);
+        }
+    }, 1000);
+});

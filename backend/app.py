@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 import sys
@@ -61,6 +61,17 @@ def index():
 @app.route('/api/health', methods=['GET'])
 def health_check():
     return {'status': 'healthy'}, 200
+
+os.makedirs(os.path.join(app.root_path, 'uploads', 'messages'), exist_ok=True)
+os.makedirs(os.path.join(app.root_path, 'uploads', 'profile_pics'), exist_ok=True)
+
+@app.route('/uploads/messages/<path:filename>')
+def serve_uploads(filename):
+    return send_from_directory(os.path.join(app.root_path, 'uploads', 'messages'), filename)
+
+@app.route('/uploads/profile_pics/<path:filename>')
+def serve_profile_pics(filename):
+    return send_from_directory(os.path.join(app.root_path, 'uploads', 'profile_pics'), filename)
 
 if __name__ == '__main__':
     app.run(debug=Config.DEBUG, port=Config.PORT, host='0.0.0.0')

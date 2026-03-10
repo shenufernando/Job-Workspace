@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,21 +8,21 @@
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- Sidebar & Layout Styles (Matching Admin) --- */
+        /* --- Sidebar & Layout Styles --- */
         body {
-            background-color: #F3F4F6;
+            background-color: var(--bg);
             display: flex;
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: var(--font);
         }
 
-        /* Sidebar */
         .sidebar {
             width: 260px;
-            background-color: #1F2937;
-            color: #E5E7EB;
+            background: var(--white);\r
+            border-right: 1px solid var(--slate-200);
+            
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -30,7 +30,7 @@
             bottom: 0;
             left: 0;
             z-index: 1000;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-sm);
         }
 
         .sidebar-brand {
@@ -39,9 +39,9 @@
             align-items: center;
             padding: 0 25px;
             font-size: 1.25rem;
-            font-weight: bold;
-            color: white;
-            border-bottom: 1px solid #374151;
+            font-weight: 800;
+            color: var(--slate-900);
+            border-bottom: 1px solid var(--slate-200);
             gap: 10px;
         }
 
@@ -55,24 +55,24 @@
         .sidebar-link {
             display: flex;
             align-items: center;
-            padding: 12px 25px;
-            color: #9CA3AF;
+            padding: 14px 25px;
+            color: #475569;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all var(--duration) var(--ease);
             font-weight: 500;
             border-left: 4px solid transparent;
             cursor: pointer;
         }
 
         .sidebar-link:hover {
-            background-color: #374151;
-            color: white;
+            background: var(--bg);
+            color: var(--slate-900);
         }
 
         .sidebar-link.active {
-            background-color: #374151;
-            color: white;
-            border-left-color: var(--primary-color);
+            background: #eff6ff;
+            color: var(--primary);
+            border-left-color: var(--primary);
         }
 
         .sidebar-link i {
@@ -82,10 +82,9 @@
 
         .sidebar-footer {
             padding: 20px 25px;
-            border-top: 1px solid #374151;
+            border-top: 1px solid var(--slate-200);
         }
 
-        /* Main Content */
         .main-content {
             margin-left: 260px;
             flex: 1;
@@ -93,7 +92,6 @@
             width: calc(100% - 260px);
         }
 
-        /* Header Area */
         .top-header {
             display: flex;
             justify-content: flex-end;
@@ -106,10 +104,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--white);
+            padding: 8px 16px;
+            border-radius: var(--r-full);
+            box-shadow: var(--shadow-sm);
         }
 
         .notification-bell {
@@ -123,21 +121,21 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            color: #4B5563;
+            color: var(--text-secondary);
             transition: 0.2s;
         }
 
         .notification-bell:hover {
-            background: #F3F4F6;
-            color: var(--primary-color);
+            background: var(--slate-100);
+            color: var(--primary);
         }
 
         .notification-badge {
             position: absolute;
             top: -2px;
             right: -2px;
-            background: #EF4444;
-            color: white;
+            background: var(--danger);
+            color: var(--slate-900);
             border-radius: 50%;
             width: 18px;
             height: 18px;
@@ -145,10 +143,9 @@
             align-items: center;
             justify-content: center;
             font-size: 0.7rem;
-            border: 2px solid #F3F4F6;
+            border: 2px solid var(--slate-100);
         }
 
-        /* Section Header */
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -158,40 +155,23 @@
 
         .section-header h2 {
             font-size: 1.8rem;
-            color: #111827;
+            color: var(--text-primary);
             margin: 0;
         }
 
-        /* --- Job Card Styles (Premium Look) --- */
         .job-card {
             background: white;
-            border-radius: 12px;
+            border-radius: var(--r-xl);
             padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border-left: 5px solid transparent;
-            transition: transform 0.2s;
+            box-shadow: var(--shadow-card);
+            border-left: 4px solid var(--primary);
+            transition: all var(--duration) var(--ease);
         }
 
         .job-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .status-pending {
-            border-left-color: #F59E0B;
-        }
-
-        .status-approved {
-            border-left-color: #10B981;
-        }
-
-        .status-completed {
-            border-left-color: #6B7280;
-        }
-
-        .status-rejected {
-            border-left-color: #EF4444;
+            box-shadow: var(--shadow-card-hover);
         }
 
         .job-header {
@@ -204,14 +184,14 @@
         .job-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1F2937;
+            color: var(--text-primary);
             margin: 0;
         }
 
         .job-meta {
             display: flex;
             gap: 20px;
-            color: #6B7280;
+            color: var(--text-secondary);
             font-size: 0.9rem;
             margin-bottom: 15px;
             flex-wrap: wrap;
@@ -224,10 +204,10 @@
         }
 
         .job-desc {
-            color: #4B5563;
+            color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 20px;
-            border-bottom: 1px solid #F3F4F6;
+            border-bottom: 1px solid var(--slate-200);
             padding-bottom: 20px;
         }
 
@@ -237,56 +217,25 @@
             gap: 10px;
         }
 
-        /* Buttons */
-        .action-btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-            font-size: 0.9rem;
-        }
+        .action-btn { padding: 8px 18px; border-radius: 999px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.22s ease; font-size: 0.85rem; font-family: var(--font); }
 
-        .action-btn:hover {
-            opacity: 0.9;
-        }
+        .action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,.08); }
 
-        .btn-primary-custom {
-            background-color: #4F46E5;
-            color: white;
-            box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
-        }
+        .btn-primary-custom { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); color: #fff; box-shadow: 0 2px 8px rgba(37,99,235,.28); }
 
-        .btn-pay {
-            background-color: #4F46E5;
-            color: white;
-        }
+        .btn-pay { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); color: #fff; box-shadow: 0 2px 8px rgba(37,99,235,.22); }
 
-        .btn-view {
-            background-color: #E0E7FF;
-            color: #4338CA;
-        }
+        .btn-view { background: #eff6ff; color: #1d4ed8; }
 
-        .btn-complete {
-            background-color: #1F2937;
-            color: white;
-        }
+        .btn-complete { background: linear-gradient(135deg, #10b981 0%, #0d9488 100%); color: #fff; box-shadow: 0 2px 8px rgba(16,185,129,.30); }
 
-        .btn-rate {
-            background-color: #F59E0B;
-            color: white;
-        }
+        .btn-rate { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; }
 
         .btn-match {
             background-color: #D1FAE5;
             color: #065F46;
         }
 
-        /* Star Rating */
         .star-rating {
             display: flex;
             justify-content: center;
@@ -296,7 +245,7 @@
 
         .star-btn {
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all var(--duration) var(--ease);
             color: #E5E7EB;
         }
 
@@ -308,12 +257,11 @@
             color: #F59E0B;
         }
 
-        /* Form Styles for Profile */
         .form-card {
             background: white;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-card);
             max-width: 700px;
         }
 
@@ -325,22 +273,13 @@
             display: block;
             margin-bottom: 5px;
             font-weight: 600;
-            color: #374151;
+            color: var(--text-primary);
         }
 
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #D1D5DB;
-            border-radius: 6px;
-            outline: none;
-        }
+        .form-control { width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-family: var(--font); font-size: 0.9rem; background: #f8fafc; color: var(--text-primary); outline: none; transition: all 0.22s ease; }
 
-        .form-control:focus {
-            border-color: var(--primary-color);
-        }
+        .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -379,7 +318,6 @@
             <i class="fas fa-briefcase"></i>
             <span>Job Workspace</span>
         </div>
-
         <ul class="sidebar-menu">
             <li><a href="#" onclick="loadMyJobs()" class="sidebar-link active" id="nav-jobs"><i
                         class="fas fa-th-list"></i> <span>My Jobs</span></a></li>
@@ -390,33 +328,33 @@
             <li><a href="#" onclick="loadNotifications()" class="sidebar-link" id="nav-notifications"><i
                         class="fas fa-bell"></i> <span>Notifications</span></a></li>
         </ul>
-
         <div class="sidebar-footer">
-            <a href="#" onclick="logout()" class="sidebar-link" style="color: #F87171; padding-left: 0;">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
+            <a href="#" onclick="logout()" class="sidebar-link" style="color: #F87171; padding-left: 0;"><i
+                    class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </div>
     </aside>
 
     <main class="main-content">
-
         <div class="top-header">
+
+            <div id="google_translate_element" style="margin-right: 15px;"></div>
             <div class="notification-bell" onclick="loadNotifications()">
                 <i class="fas fa-bell"></i>
                 <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
             </div>
-
-            <div class="user-pill">
-                <i class="fas fa-user-tie" style="color: #6B7280; font-size: 1.2rem;"></i>
-                <span style="font-weight: 500; color: #374151; font-size: 0.9rem;">Job Provider</span>
-                <span style="border-left: 1px solid #E5E7EB; padding-left: 10px; color: #6B7280; font-size: 0.85rem;"
+            <div class="user-pill" style="gap: 10px;">
+                <img id="headerProfilePic"
+                    src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%239CA3AF%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm0%203c1.66%200%203%201.34%203%203s-1.34%203-3%203-3-1.34-3-3%201.34-3%203-3zm0%2014.2c-2.5%200-4.71-1.28-6-3.22.03-1.99%204-3.08%206-3.08%201.99%200%205.97%201.09%206%203.08-1.29%201.94-3.5%203.22-6%203.22z%22%2F%3E%3C%2Fsvg%3E"
+                    style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; display: none;">
+                <i id="headerProfileIcon" class="fas fa-user-tie" style="color: var(--text-secondary); font-size: 1.2rem;"></i>
+                <span id="headerUserName" style="font-weight: 500; color: var(--text-primary); font-size: 0.9rem;">Job
+                    Provider</span>
+                <span style="border-left: 1px solid #E5E7EB; padding-left: 10px; color: var(--text-secondary); font-size: 0.85rem;"
                     id="currentDate"></span>
             </div>
         </div>
 
         <div id="dashboardContent">
-
             <div id="jobsSection">
                 <div class="section-header">
                     <h2>My Job Posts</h2>
@@ -424,8 +362,7 @@
                         <i class="fas fa-plus-circle"></i> Post New Job
                     </button>
                 </div>
-                <div id="jobsList">
-                </div>
+                <div id="jobsList"></div>
             </div>
 
             <div id="profileSection" style="display: none;">
@@ -434,22 +371,26 @@
                 </div>
                 <div class="form-card">
                     <form id="profileForm">
-                        <div class="form-group">
-                            <label>Full Name</label>
-                            <input type="text" id="profileName" required class="form-control">
+                        <div class="form-group"
+                            style="display: flex; flex-direction: column; align-items: center; margin-bottom: 25px;">
+                            <img id="profilePicPreview"
+                                src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%239CA3AF%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm0%203c1.66%200%203%201.34%203%203s-1.34%203-3%203-3-1.34-3-3%201.34-3%203-3zm0%2014.2c-2.5%200-4.71-1.28-6-3.22.03-1.99%204-3.08%206-3.08%201.99%200%205.97%201.09%206%203.08-1.29%201.94-3.5%203.22-6%203.22z%22%2F%3E%3C%2Fsvg%3E"
+                                style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #E5E7EB; cursor: pointer; transition: 0.2s;"
+                                onclick="document.getElementById('profilePictureInput').click()"
+                                onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <input type="file" id="profilePictureInput" accept="image/*" style="display: none;"
+                                onchange="uploadProfilePicture(event)">
+                            <small style="color: var(--text-secondary); margin-top: 10px;"><i class="fas fa-camera"></i> Click image
+                                to upload profile picture</small>
                         </div>
-                        <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" id="profileEmail" required class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Phone Number</label>
-                            <input type="tel" id="profilePhone" required class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Address</label>
-                            <textarea id="profileAddress" required class="form-control" rows="3"></textarea>
-                        </div>
+                        <div class="form-group"><label>Full Name</label><input type="text" id="profileName" required
+                                class="form-control"></div>
+                        <div class="form-group"><label>Email Address</label><input type="email" id="profileEmail"
+                                required class="form-control"></div>
+                        <div class="form-group"><label>Phone Number</label><input type="tel" id="profilePhone" required
+                                class="form-control"></div>
+                        <div class="form-group"><label>Address</label><textarea id="profileAddress" required
+                                class="form-control" rows="3"></textarea></div>
                         <div style="text-align: right; margin-top: 20px;">
                             <button type="submit" class="action-btn btn-primary-custom">Save Changes</button>
                         </div>
@@ -472,70 +413,90 @@
                     <button class="action-btn btn-view" onclick="markAllAsRead()">Mark All Read</button>
                 </div>
                 <div class="card"
-                    style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    style="background: white; border-radius: var(--r-xl); padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                     <div id="notificationsList"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div id="createJobModal" class="modal-overlay"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
-        <div class="modal-content"
-            style="background: white; width: 90%; max-width: 500px; max-height: 90vh; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
-            <div class="modal-header"
-                style="background: #4F46E5; padding: 20px; display: flex; justify-content: space-between; align-items: center; color: white;">
+    <div id="createJobModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
                 <h2 style="margin: 0; font-size: 1.25rem;"><i class="fas fa-plus-circle"></i> Create New Job</h2>
-                <button type="button" class="close-btn" onclick="closeCreateJobModal()"
-                    style="background: none; border: none; color: white; font-size: 2rem; cursor: pointer;">&times;</button>
+                <button type="button" onclick="closeCreateJobModal()" class="close-btn">&times;</button>
             </div>
-            <div class="modal-body" style="padding: 20px; overflow-y: auto;">
+            <div class="modal-body">
                 <form id="createJobForm">
-                    <div class="form-group">
-                        <label style="font-weight: 600; color: #4B5563;">Job Title</label>
-                        <input type="text" id="jobTitle" placeholder="e.g. Need Expert Plumber" required
-                            class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight: 600; color: #4B5563;">Description</label>
-                        <textarea id="jobDescription" placeholder="Describe the task details..." required
-                            class="form-control" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-weight: 600; color: #4B5563;">Location</label>
-                        <input type="text" id="jobLocation" placeholder="e.g. Colombo 03" required class="form-control">
-                    </div>
+                    <div class="form-group"><label>Job Title</label><input type="text" id="jobTitle" required
+                            class="form-control"></div>
+                    <div class="form-group"><label>Description</label><textarea id="jobDescription" required
+                            class="form-control" rows="3"></textarea></div>
+                    <div class="form-group"><label>Location</label><input type="text" id="jobLocation" required
+                            class="form-control"></div>
+                    <div class="form-group"><label>Required Skills (e.g., Graphic Design, React)</label><input
+                            type="text" id="jobRequiredSkills" class="form-control"></div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="form-group">
-                            <label style="font-weight: 600; color: #4B5563;">Budget (LKR)</label>
-                            <input type="number" id="jobSalary" min="0" placeholder="5000" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label style="font-weight: 600; color: #4B5563;">Exp (Years)</label>
-                            <input type="number" id="jobExperience" min="0" value="0" class="form-control">
-                        </div>
+                        <div class="form-group"><label>Budget (LKR)</label><input type="number" id="jobSalary" min="0"
+                                class="form-control"></div>
+                        <div class="form-group"><label>Exp (Years)</label><input type="number" id="jobExperience"
+                                min="0" value="0" class="form-control"></div>
                     </div>
-                    <div class="form-group">
-                        <label style="font-weight: 600; color: #4B5563;">Duration</label>
-                        <input type="text" id="jobDuration" placeholder="e.g., 2 weeks" class="form-control">
-                    </div>
+                    <div class="form-group"><label>Duration</label><input type="text" id="jobDuration"
+                            class="form-control"></div>
                     <div style="margin-top: 25px; display: flex; gap: 10px;">
                         <button type="button" class="action-btn" onclick="closeCreateJobModal()"
-                            style="flex: 1; justify-content: center; background: #E5E7EB; color: #374151;">Cancel</button>
-                        <button type="submit" class="action-btn btn-pay" style="flex: 2; justify-content: center;">Post
-                            Job</button>
+                            style="flex: 1; justify-content: center; background: #E5E7EB; color: var(--text-primary);">Cancel</button>
+                        <button type="submit" class="action-btn btn-pay"
+                            style="flex: 2; justify-content: center;">Request Approval</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <div id="reviewModal" class="modal-overlay"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+    <div id="paymentModal" class="modal-overlay">
         <div class="modal-content"
-            style="background: white; width: 90%; max-width: 400px; border-radius: 12px; padding: 25px; text-align: center;">
-            <h2 style="margin-bottom: 5px; color: #111827;">Rate Worker</h2>
-            <p id="reviewWorkerName" style="color: #6B7280; margin-bottom: 20px;">How was your experience?</p>
+            style="background: white; width: 90%; max-width: 400px; border-radius: var(--r-xl); padding: 25px; text-align: center;">
+            <h2 style="margin-bottom: 15px; color: var(--text-primary);"><i class="fas fa-credit-card"></i> Pay & Publish</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Your job request is approved! Pay the platform fee to
+                publish it.</p>
+            <form id="paymentForm">
+                <input type="hidden" id="payJobId">
+                <div class="form-group" style="text-align: left;">
+                    <label>Amount (LKR)</label>
+                    <input type="text" value="500.00" readonly class="form-control"
+                        style="background-color: var(--bg); cursor: not-allowed; font-weight: 600; color: var(--text-primary);">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label>Card Number</label>
+                    <input type="text" placeholder="1234 5678 1234 5678" required class="form-control" maxlength="19"
+                        oninput="this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left;">
+                    <div class="form-group"><label>Expiry Date</label><input type="text" placeholder="MM/YY" required
+                            class="form-control" maxlength="5"
+                            oninput="let v = this.value.replace(/\D/g, ''); this.value = v.length > 2 ? v.substring(0,2) + '/' + v.substring(2,4) : v;">
+                    </div>
+                    <div class="form-group"><label>CVV</label><input type="text" placeholder="123" required
+                            class="form-control" maxlength="4"
+                            oninput="this.value = this.value.replace(/\D/g, '').substring(0,4);"></div>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button type="button" class="action-btn" onclick="closePaymentModal()"
+                        style="flex: 1; justify-content: center; background: #E5E7EB; color: var(--text-primary);">Cancel</button>
+                    <button type="submit" class="action-btn btn-primary-custom"
+                        style="flex: 1; justify-content: center;">Pay Now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="reviewModal" class="modal-overlay">
+        <div class="modal-content"
+            style="background: white; width: 90%; max-width: 400px; border-radius: var(--r-xl); padding: 25px; text-align: center;">
+            <h2 style="margin-bottom: 5px; color: var(--text-primary);">Rate Worker</h2>
+            <p id="reviewWorkerName" style="color: var(--text-secondary); margin-bottom: 20px;">How was your experience?</p>
             <form id="reviewForm">
                 <input type="hidden" id="reviewJobId">
                 <input type="hidden" id="reviewWorkerId">
@@ -548,10 +509,10 @@
                 </div>
                 <input type="hidden" id="ratingValue" required>
                 <textarea id="reviewComment" placeholder="Write a comment..."
-                    style="width: 100%; padding: 12px; border: 1px solid #D1D5DB; border-radius: 8px; margin-bottom: 20px; min-height: 80px; font-family: inherit; margin-top: 10px;"></textarea>
+                    style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: var(--r-md); margin-bottom: 20px; min-height: 80px; font-family: inherit; margin-top: 10px;"></textarea>
                 <div style="display: flex; gap: 10px;">
                     <button type="button" class="action-btn" onclick="closeReviewModal()"
-                        style="flex: 1; justify-content: center; background: #E5E7EB; color: #374151;">Cancel</button>
+                        style="flex: 1; justify-content: center; background: #E5E7EB; color: var(--text-primary);">Cancel</button>
                     <button type="submit" class="action-btn btn-rate"
                         style="flex: 1; justify-content: center;">Submit</button>
                 </div>
@@ -559,26 +520,50 @@
         </div>
     </div>
 
-    <script src="../js/main.js"></script>
+    <div id="requestWorkerModal" class="modal-overlay">
+        <div class="modal-content"
+            style="background: white; width: 90%; max-width: 400px; border-radius: var(--r-xl); padding: 25px; text-align: center;">
+            <h2 style="margin-bottom: 5px; color: var(--text-primary);">Invite Worker</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Select a job to invite <strong
+                    id="inviteWorkerNameTxt"></strong> to apply.</p>
+            <form id="inviteWorkerForm">
+                <input type="hidden" id="inviteWorkerId">
+                <div class="form-group" style="text-align: left;">
+                    <label>Select Active Job</label>
+                    <select id="inviteJobSelect" required class="form-control">
+                    </select>
+                </div>
+                <div style="margin-top: 25px; display: flex; gap: 10px;">
+                    <button type="button" class="action-btn" onclick="closeRequestWorkerModal()"
+                        style="flex: 1; justify-content: center; background: #E5E7EB; color: var(--text-primary);">Cancel</button>
+                    <button type="submit" class="action-btn btn-primary-custom"
+                        style="flex: 1; justify-content: center;">Send Invite</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/main.js?v=2"></script>
     <script>
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+        let currentMatchedWorkers = [];
+        let globalProviderJobs = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const user = getCurrentUser();
                 const token = getAuthToken();
                 if (!token || !user || user.role !== 'provider') {
-                    removeAuthToken(); removeCurrentUser();
-                    window.location.href = 'login.html';
-                    return;
+                    logout(); return;
                 }
                 loadProfileData();
                 loadMyJobs();
                 checkNotifications();
+                setupStarRating();
             }, 50);
         });
 
-        // --- Navigation Logic ---
         function resetViews() {
             ['jobsSection', 'profileSection', 'workersSection', 'notificationsSection'].forEach(id => {
                 document.getElementById(id).style.display = 'none';
@@ -586,59 +571,205 @@
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
         }
 
-        // --- JOBS ---
         async function loadMyJobs() {
             resetViews();
             document.getElementById('jobsSection').style.display = 'block';
             document.getElementById('nav-jobs').classList.add('active');
+
             try {
-                const jobs = await apiRequest('/jobs');
+                let jobs = await apiRequest('/jobs');
+                const detailedJobsPromises = jobs.map(async (job) => {
+                    try { return await apiRequest(`/jobs/${job.id}`); }
+                    catch (e) { return job; }
+                });
+                jobs = await Promise.all(detailedJobsPromises);
+                globalProviderJobs = jobs;
                 displayJobs(jobs);
             } catch (error) { showAlert(error.message, 'error'); }
         }
 
-        function displayJobs(jobs) {
-            const jobsList = document.getElementById('jobsList');
-            jobsList.innerHTML = '';
-            if (jobs.length === 0) {
-                jobsList.innerHTML = `
-                    <div style="text-align:center; padding: 50px; color:#6B7280; background:white; border-radius:12px;">
-                        <i class="fas fa-clipboard-list fa-3x" style="opacity:0.3; margin-bottom:15px;"></i>
-                        <p>No jobs posted yet. Click "Post New Job" to get started.</p>
-                    </div>`;
+        // --- Browse Workers ---
+        async function loadWorkers() {
+            resetViews();
+            document.getElementById('workersSection').style.display = 'block';
+            document.getElementById('nav-workers').classList.add('active');
+            try {
+                const workers = await apiRequest('/workers');
+                const list = document.getElementById('workersList');
+                if (workers.length === 0) {
+                    list.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #666;">No workers found.</p>`;
+                    return;
+                }
+
+                // 🔥 FIXED: Passing w.position to the modal function
+                list.innerHTML = workers.map(w => `
+                    <div style="background:white; padding:20px; border-radius:10px; border-top:4px solid #4F46E5; box-shadow:0 2px 5px rgba(0,0,0,0.05); display:flex; flex-direction:column; justify-content:space-between;">
+                        <div>
+                            <div style="display:flex; justify-content:space-between; align-items:start;">
+                                <h3 style="margin:0 0 5px 0; color:#1F2937;">${w.name} ${w.is_new ? `<span style="background-color: #10B981; color: var(--slate-900); font-size: 0.7rem; padding: 2px 8px; border-radius: var(--r-xl); margin-left: 8px; vertical-align: middle;">NEW</span>` : ''}</h3>
+                                ${w.avg_rating ? `<span style="background:#FEF3C7; color:#D97706; padding:2px 8px; border-radius:10px; font-size:0.8rem;"><i class="fas fa-star"></i> ${parseFloat(w.avg_rating).toFixed(1)}</span>` : ''}
+                            </div>
+                            <p style="color:#6B7280; margin:5px 0; font-size:0.9rem;"><i class="fas fa-briefcase"></i> ${w.position || 'Worker'}</p>
+                            <p style="color:#6B7280; margin:5px 0; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${w.address || 'N/A'}</p>
+                            <p style="color:#6B7280; margin:5px 0 15px 0; font-size:0.9rem;"><i class="fas fa-clock"></i> ${w.experience} Years Exp</p>
+                        </div>
+                        ${w.is_requested ?
+                        `<button disabled style="background-color: #10B981; color: var(--slate-900); cursor: not-allowed; padding: 6px 12px; border-radius: var(--r-sm); border: none; font-weight: 600; width: 100%;"><i class="fas fa-check"></i> Requested</button>`
+                        :
+                        `<button class="action-btn btn-view" style="width:100%; justify-content:center;" onclick="openRequestWorkerModal(${w.id}, '${w.name}', '${w.position}')">
+                                <i class="fas fa-paper-plane"></i> Request Worker
+                            </button>`
+                    }
+                    </div>`).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // --- Request Worker Logic ---
+        function openRequestWorkerModal(workerId, workerName, workerPosition) {
+            // 🔥 FIXED: Only show jobs where the job title includes the worker's position
+            const matchingJobs = globalProviderJobs.filter(j =>
+                j.status === 'approved' &&
+                j.payment_status === 'paid' &&
+                j.title.toLowerCase().includes((workerPosition || '').toLowerCase())
+            );
+
+            if (matchingJobs.length === 0) {
+                showAlert(`You do not have any active job posts matching a ${workerPosition}.`, 'error');
                 return;
             }
+
+            document.getElementById('inviteWorkerId').value = workerId;
+            document.getElementById('inviteWorkerNameTxt').textContent = workerName;
+
+            const select = document.getElementById('inviteJobSelect');
+            select.innerHTML = '<option value="">-- Select a Job --</option>' +
+                matchingJobs.map(j => `<option value="${j.id}">${j.title}</option>`).join('');
+
+            document.getElementById('requestWorkerModal').style.display = 'flex';
+        }
+
+        function closeRequestWorkerModal() {
+            document.getElementById('requestWorkerModal').style.display = 'none';
+        }
+
+        const inviteForm = document.getElementById('inviteWorkerForm');
+        if (inviteForm) {
+            inviteForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const workerId = document.getElementById('inviteWorkerId').value;
+                const jobId = document.getElementById('inviteJobSelect').value;
+
+                if (!jobId) return;
+
+                try {
+                    await apiRequest(`/jobs/${jobId}/invite/${workerId}`, { method: 'POST' });
+                    showAlert('Invitation sent to worker successfully!', 'success');
+                    closeRequestWorkerModal();
+                } catch (err) {
+                    showAlert(err.message, 'error');
+                }
+            });
+        }
+
+        async function loadProfile() {
+            resetViews();
+            document.getElementById('profileSection').style.display = 'block';
+            document.getElementById('nav-profile').classList.add('active');
+            loadProfileData();
+        }
+
+        async function loadNotifications() {
+            resetViews();
+            document.getElementById('notificationsSection').style.display = 'block';
+            document.getElementById('nav-notifications').classList.add('active');
+            try {
+                const notes = await apiRequest('/notifications');
+                const list = document.getElementById('notificationsList');
+                list.innerHTML = notes.length ? notes.map(n => `
+                    <div style="padding:15px; border-bottom:1px solid #eee; background:${n.is_read ? 'white' : '#F0F9FF'};">
+                        <div style="font-weight:600;">${n.title}</div>
+                        <div style="color:#4B5563;">${n.message}</div>
+                        <div style="color:#9CA3AF; font-size:0.75rem;">${typeof formatDate === 'function' ? formatDate(n.created_at) : n.created_at}</div>
+                    </div>`).join('') : '<p style="text-align:center; padding:20px; color:#666;">No notifications.</p>';
+            } catch (e) { }
+        }
+
+        function openPaymentModal(jobId) {
+            document.getElementById('payJobId').value = jobId;
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        const paymentForm = document.getElementById('paymentForm');
+        if (paymentForm) {
+            paymentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const jobId = document.getElementById('payJobId').value;
+                try {
+                    await apiRequest(`/jobs/${jobId}/pay`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ amount: 500 })
+                    });
+                    showAlert('Payment successful! Job is now published.', 'success');
+                    closePaymentModal();
+                    loadMyJobs();
+                } catch (err) {
+                    showAlert(err.message, 'error');
+                }
+            });
+        }
+
+        function displayJobs(jobs) {
+            const jobsList = document.getElementById('jobsList');
+            if (!jobsList) return;
+            jobsList.innerHTML = '';
+            if (jobs.length === 0) {
+                jobsList.innerHTML = `<div style="text-align:center; padding:50px; color:#6B7280; background:white; border-radius:12px;"><p>No jobs posted yet.</p></div>`;
+                return;
+            }
+
             jobs.forEach(job => {
+                let badgeCount = 0;
+                if (job.applications && Array.isArray(job.applications)) {
+                    badgeCount = job.applications.filter(a => (a.status || '').toLowerCase() === 'pending').length;
+                }
+
+                let isPublished = (job.status === 'approved' && job.payment_status === 'paid');
+                let needsPayment = (job.status === 'approved' && job.payment_status !== 'paid');
+
+                let statusLabel = `<span style="padding:4px 10px; border-radius:12px; font-size:0.75rem; background:#F3F4F6;">${job.status}</span>`;
+
+                if (isPublished) statusLabel = `<span style="background:#D1FAE5; color:#065F46; padding:4px 10px; border-radius:12px; font-size:0.75rem; font-weight:bold;">Active (Published)</span>`;
+                else if (needsPayment) statusLabel = `<span style="background:#DBEAFE; color:#1E40AF; padding:4px 10px; border-radius:12px; font-size:0.75rem; font-weight:bold;">Approved - Pending Payment</span>`;
+                else if (job.status === 'pending') statusLabel = `<span style="background:#FEF3C7; color:#D97706; padding:4px 10px; border-radius:12px; font-size:0.75rem; font-weight:bold;">Pending Approval</span>`;
+                else if (job.status === 'completed') statusLabel = `<span style="background:#E5E7EB; color:#374151; padding:4px 10px; border-radius:12px; font-size:0.75rem; font-weight:bold;">Completed</span>`;
+
                 const div = document.createElement('div');
                 div.className = `job-card status-${job.status}`;
-
-                // Status Labels
-                let statusLabel = `<span style="padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; background: #F3F4F6; color: #374151; font-weight: 600; text-transform: uppercase;">${job.status}</span>`;
-                if (job.status === 'approved') statusLabel = `<span style="padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; background: #D1FAE5; color: #065F46; font-weight: 600; text-transform: uppercase;">Active</span>`;
-                else if (job.status === 'pending') statusLabel = `<span style="padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; background: #FEF3C7; color: #D97706; font-weight: 600; text-transform: uppercase;">Pending Approval</span>`;
-                else if (job.status === 'completed') statusLabel = `<span style="padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; background: #E5E7EB; color: #374151; font-weight: 600; text-transform: uppercase;">Completed</span>`;
-
                 div.innerHTML = `
-                    <div class="job-header">
-                        <h3 class="job-title">${job.title}</h3>
-                        ${statusLabel}
-                    </div>
+                    <div class="job-header"><h3 class="job-title">${job.title}</h3>${statusLabel}</div>
                     <div class="job-meta">
                         <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
-                        <span><i class="fas fa-money-bill-wave"></i> ${formatCurrency(job.salary || 0)}</span>
-                        <span><i class="fas fa-users"></i> ${job.application_count || 0} applicants</span>
+                        <span><i class="fas fa-money-bill-wave"></i> ${typeof formatCurrency === 'function' ? formatCurrency(job.salary || 0) : job.salary}</span>
+                        <span><i class="fas fa-users"></i> ${job.application_count || 0} Total Applicants</span>
                     </div>
-                    <div class="job-desc">${job.description}</div>
-                    
+                    <div class="job-desc">${job.description || ''}</div>
                     <div class="job-footer">
-                        ${job.status === 'pending' && job.payment_status === 'pending' ?
-                        `<button class="action-btn btn-pay" onclick="processDirectPayment(${job.id}, ${job.salary || 0})"><i class="fas fa-credit-card"></i> Pay Now</button>` : ''}
-                        
-                        ${job.status === 'approved' ? `
+                        ${isPublished ? `
                             <button class="action-btn btn-match" onclick="viewMatchedWorkers(${job.id})"><i class="fas fa-robot"></i> Matches</button>
-                            <button class="action-btn btn-view" onclick="viewApplications(${job.id})"><i class="fas fa-list"></i> Applicants (${job.application_count || 0})</button>
-                            <button class="action-btn btn-complete" onclick="completeJob(${job.id})"><i class="fas fa-check-circle"></i> Complete</button>` : ''}
+                            <button class="action-btn btn-view" onclick="viewApplications(${job.id})">
+                                <i class="fas fa-list"></i> Applicants
+                                ${badgeCount > 0 ? `<span style="background:#EF4444; color:white; padding:2px 8px; border-radius:50%; font-size:0.75rem; margin-left:8px; font-weight:bold;">${badgeCount}</span>` : ''}
+                            </button>
+                            <button class="action-btn btn-complete" onclick="openCompletionPaymentModal(${job.id}, '${job.salary || 0}')"><i class="fas fa-check-circle"></i> Complete</button>
+                        ` : ''}
                         
+                        ${needsPayment ? `
+                            <button class="action-btn btn-pay" onclick="openPaymentModal(${job.id})"><i class="fas fa-credit-card"></i> Pay & Publish</button>
+                        ` : ''}
+
                         ${job.status === 'completed' ? `
                             <button class="action-btn btn-rate" onclick="openRateModal(${job.id})"><i class="fas fa-star"></i> Rate Worker</button>
                         ` : ''}
@@ -647,249 +778,423 @@
             });
         }
 
-        // --- Profile ---
-        function loadProfile() {
-            resetViews();
-            document.getElementById('profileSection').style.display = 'block';
-            document.getElementById('nav-profile').classList.add('active');
-            loadProfileData();
+        async function openRateModal(jobId) {
+            try {
+                const job = await apiRequest(`/jobs/${jobId}`);
+                const app = job.applications.find(a => a.status === 'accepted' || a.status === 'completed');
+                if (!app) { showAlert('No worker found associated with this job.', 'error'); return; }
+                document.getElementById('reviewJobId').value = jobId;
+                document.getElementById('reviewWorkerId').value = app.worker_id;
+                document.getElementById('reviewWorkerName').textContent = `Rate your experience with ${app.worker_name}`;
+                document.getElementById('ratingValue').value = '';
+                document.getElementById('reviewComment').value = '';
+                updateStars(0);
+                document.getElementById('reviewModal').style.display = 'flex';
+            } catch (e) { showAlert('Error opening rating modal', 'error'); }
         }
+
+        function closeReviewModal() { document.getElementById('reviewModal').style.display = 'none'; }
+
+        function setupStarRating() {
+            document.querySelectorAll('.star-btn').forEach(star => {
+                star.addEventListener('click', function () {
+                    const value = this.getAttribute('data-value');
+                    document.getElementById('ratingValue').value = value;
+                    updateStars(value);
+                });
+            });
+        }
+
+        function updateStars(value) {
+            document.querySelectorAll('.star-btn').forEach(s => {
+                if (s.getAttribute('data-value') <= value) {
+                    s.classList.add('active'); s.style.color = '#F59E0B';
+                } else {
+                    s.classList.remove('active'); s.style.color = '#E5E7EB';
+                }
+            });
+        }
+
+        const reviewForm = document.getElementById('reviewForm');
+        if (reviewForm) {
+            reviewForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const jobId = document.getElementById('reviewJobId').value;
+                const workerId = document.getElementById('reviewWorkerId').value;
+                const rating = document.getElementById('ratingValue').value;
+                const comment = document.getElementById('reviewComment').value;
+                if (!rating) { showAlert('Please select a star rating.', 'error'); return; }
+                try {
+                    await apiRequest('/reviews', { method: 'POST', body: JSON.stringify({ job_id: jobId, worker_id: workerId, rating: parseInt(rating), comment: comment }) });
+                    showAlert('Review submitted successfully!', 'success');
+                    closeReviewModal();
+                } catch (e) { showAlert(e.message, 'error'); }
+            });
+        }
+
+        // --- FIXED: View Applicants Modal (Shows "Invited" for invited workers) ---
+        async function viewApplications(jobId) {
+            try {
+                const job = await apiRequest(`/jobs/${jobId}`);
+                const apps = job.applications || [];
+                if (document.getElementById('appsModal')) document.getElementById('appsModal').remove();
+
+                const modalHtml = `
+                    <div id="appsModal" class="modal-overlay" style="display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center;">
+                        <div class="modal-content" style="background:white; width:90%; max-width:600px; padding:20px; border-radius:10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                <h3 style="margin:0;">Applicants for ${job.title}</h3>
+                                <button onclick="document.getElementById('appsModal').remove()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                            </div>
+                            <div style="max-height:60vh; overflow-y:auto;">
+                                ${apps.length === 0 ? '<p style="text-align:center; color:#666;">No applicants yet.</p>' : apps.map(app => {
+                    let actionHtml = '';
+                    if ((app.status || '').toLowerCase() === 'pending') {
+                        actionHtml = `
+                                            <button onclick="updateAppStatus(${job.id}, ${app.id}, 'accepted')" style="background:#10B981; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; margin-right:5px;">Accept</button>
+                                            <button onclick="updateAppStatus(${job.id}, ${app.id}, 'rejected')" style="background:#EF4444; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Reject</button>`;
+                    }
+                    // 🔥 NEW: Show "Invited" badge instead of Accept/Reject buttons
+                    else if ((app.status || '').toLowerCase() === 'invited') {
+                        actionHtml = `<span style="background:#E5E7EB; color:#4B5563; padding:4px 10px; border-radius:12px; font-size:0.8rem; font-weight:bold;">Invited (Waiting)</span>`;
+                    }
+                    else {
+                        let badgeColor = (app.status || '').toLowerCase() === 'accepted' ? '#D1FAE5; color:#065F46' : '#FEE2E2; color:#B91C1C';
+                        let messageBtn = '';
+                        if ((app.status || '').toLowerCase() === 'accepted') {
+                            messageBtn = `<button onclick="openMessages(${job.id}, ${app.worker_id}, '${app.worker_name}')" style="background:#3B82F6; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; margin-left:10px;"><i class="fas fa-comments"></i> Message Worker</button>`;
+                        }
+                        actionHtml = `<div style="display:flex; align-items:center;"><span style="background:${badgeColor}; padding:4px 10px; border-radius:12px; font-size:0.8rem; font-weight:bold; text-transform:capitalize;">${app.status}</span>${messageBtn}</div>`;
+                    }
+                    return `
+                                    <div style="border-bottom:1px solid #eee; padding:15px 0; display:flex; justify-content:space-between; align-items:center;">
+                                        <div><div style="font-weight:bold; font-size:1.1rem; color:#1F2937;">${app.worker_name}</div><div style="color:#6B7280; font-size:0.9rem;">${app.experience} Years Experience</div></div>
+                                        <div>${actionHtml}</div>
+                                    </div>`;
+                }).join('')}
+                            </div>
+                            <button onclick="document.getElementById('appsModal').remove()" style="margin-top:20px; width:100%; padding:10px; border:none; background:#F3F4F6; cursor:pointer; border-radius:8px; font-weight:600;">Close</button>
+                        </div>
+                    </div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
+
+        async function updateAppStatus(jobId, appId, newStatus) {
+            const isApproving = newStatus === 'accepted';
+            const isRejecting = newStatus === 'rejected';
+            const result = await Swal.fire({
+                title: isApproving ? 'Accept Applicant?' : isRejecting ? 'Reject Applicant?' : `Update to "${newStatus}"?`,
+                text: isApproving
+                    ? 'The worker will be notified and can begin the job.'
+                    : isRejecting
+                        ? 'The worker will be notified that their application was not selected.'
+                        : `Change application status to "${newStatus}".`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: isApproving ? '#10b981' : isRejecting ? '#ef4444' : '#6366f1',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: isApproving ? 'Yes, Accept' : isRejecting ? 'Yes, Reject' : 'Confirm'
+            });
+            if (!result.isConfirmed) return;
+            try {
+                await apiRequest(`/jobs/${jobId}/applications/${appId}`, { method: 'PUT', body: JSON.stringify({ status: newStatus }) });
+                showAlert(`Application ${newStatus}!`, 'success');
+                viewApplications(jobId);
+                loadMyJobs();
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
+
+        async function viewMatchedWorkers(jobId) {
+            try {
+                showAlert('Analyzing workers with AI...', 'info');
+                const workers = await apiRequest(`/jobs/${jobId}/match`);
+                currentMatchedWorkers = workers;
+                const modalHtml = `
+                    <div id="matchModal" class="modal-overlay" style="display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
+                        <div class="modal-content" style="background:white; width:95%; max-width:800px; max-height:90vh; border-radius:12px; display:flex; flex-direction:column; overflow:hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.25);">
+                            <div style="padding:20px; background: linear-gradient(to right, #4F46E5, #6366F1); color: var(--slate-900);">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <div><h2 style="margin:0; font-size:1.4rem;"><i class="fas fa-magic"></i> Best Matches</h2></div>
+                                    <button onclick="document.getElementById('matchModal').remove()" style="background:none; border:none; color:white; font-size:2rem; cursor:pointer;">&times;</button>
+                                </div>
+                            </div>
+                            <div style="padding:15px; background:#F3F4F6; border-bottom:1px solid #E5E7EB; display:flex; gap:10px; flex-wrap:wrap;">
+                                <input type="text" id="filterLocation" placeholder="Search City..." onkeyup="applyFilters()" style="padding:8px; border:1px solid #D1D5DB; border-radius:6px; flex:1;">
+                                <select id="filterDistance" onchange="applyFilters()" style="padding:8px; border:1px solid #D1D5DB; border-radius:6px; width:150px; cursor:pointer;">
+                                    <option value="9999">Any Distance</option><option value="5">Within 5 km</option><option value="10">Within 10 km</option><option value="20">Within 20 km</option><option value="50">Within 50 km</option><option value="100">Within 100 km</option><option value="150">Within 150 km</option>
+                                </select>
+                                <input type="number" id="filterExp" placeholder="Min Exp (Years)" min="0" oninput="this.value = Math.abs(this.value)" onchange="applyFilters()" style="padding:8px; border:1px solid #D1D5DB; border-radius:6px; width:140px;">
+                            </div>
+                            <div id="matchListContainer" style="padding:20px; overflow-y:auto; background:#F9FAFB; flex:1;"></div>
+                        </div>
+                    </div>`;
+                if (document.getElementById('matchModal')) document.getElementById('matchModal').remove();
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                currentMatchJobId = jobId;
+                renderMatches(currentMatchedWorkers, jobId);
+            } catch (e) { showAlert(e.message, 'error'); }
+        }
+
+        let currentMatchJobId = null;
+
+        function applyFilters() {
+            const locText = document.getElementById('filterLocation').value.toLowerCase();
+            const minExp = Math.max(0, parseInt(document.getElementById('filterExp').value) || 0);
+            const maxDist = parseFloat(document.getElementById('filterDistance').value) || 9999;
+            const filtered = currentMatchedWorkers.filter(w => {
+                let wDist = (w.distance_km === 'remote_job') ? 0 : (w.distance_km || 9999);
+                return (w.address || '').toLowerCase().includes(locText) && (w.experience || 0) >= minExp && wDist <= maxDist;
+            });
+            renderMatches(filtered, currentMatchJobId);
+        }
+
+        function renderMatches(workers, jobId) {
+            const container = document.getElementById('matchListContainer');
+            if (workers.length === 0) {
+                container.innerHTML = `<div style = "text-align:center; padding:40px; color:#6B7280;"> <p>No matching workers found.</p></div > `;
+                return;
+            }
+            container.innerHTML = workers.map(w => {
+                let scoreColor = w.match_score >= 80 ? '#10B981' : (w.match_score >= 60 ? '#F59E0B' : '#6B7280');
+                let distanceDisplay = '';
+                if (w.distance_km === 'remote_job' || (w.address && w.address.toLowerCase().includes('remote'))) {
+                    distanceDisplay = '<span style="color:#059669; background:#D1FAE5; padding:2px 8px; border-radius:10px; font-weight:600; font-size:0.85rem;"><i class="fas fa-globe"></i> Remote Work</span>';
+                } else if (w.distance_km !== undefined && w.distance_km !== null && w.distance_km !== 999 && w.distance_km !== 'remote_job') {
+                    distanceDisplay = '<span style="color:#4F46E5; background:#EEF2FF; padding:2px 8px; border-radius:10px; font-weight:600; font-size:0.85rem;"><i class="fas fa-route"></i> ' + w.distance_km + ' km away</span>';
+                } else {
+                    distanceDisplay = '<span style="color:#9CA3AF; font-size:0.85rem;"><i class="fas fa-map-marker-alt"></i> No GPS Data</span>';
+                }
+                return `
+                    <div style = "background:white; padding:15px; margin-bottom:15px; border-radius:10px; border:1px solid #E5E7EB; display:flex; flex-direction:column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div style="width:50px; height:50px; background:#EEF2FF; color:#4F46E5; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.2rem;">${w.name.charAt(0)}</div>
+                            <div>
+                                <h4 style="margin:0; color:#1F2937;">${w.name} <span style="font-size:0.8rem; background:#F3F4F6; padding:2px 8px; border-radius:10px; border:1px solid #E5E7EB;">${w.position}</span></h4>
+                                <div style="color:#6B7280; font-size:0.9rem; margin-top:5px; display:flex; gap:15px; align-items:center;"><span><i class="fas fa-clock"></i> ${w.experience} Yrs</span><span><i class="fas fa-map-marker-alt"></i> ${w.address}</span>${distanceDisplay}</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center; min-width:80px;">
+                            <div style="width:50px; height:50px; border-radius:50%; border:4px solid ${scoreColor}; display:flex; align-items:center; justify-content:center; margin:0 auto 5px auto; font-weight:bold;">${Math.round(w.final_match_percentage || w.match_score)}%</div>
+                            <small style="color:${scoreColor}; font-weight:600;">Match</small>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; width: 100%;">
+                        <iframe width="100%" height="150" style="border:0; border-radius:8px;" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=${encodeURIComponent(w.address + ', Sri Lanka')}&t=&z=12&ie=UTF8&iwloc=&output=embed"></iframe>
+                        <div style="margin-top: 15px; display: flex; justify-content: flex-end;">
+                            ${w.is_requested ?
+                        `<button disabled style="background-color: #10B981; color: var(--slate-900); cursor: not-allowed; padding: 8px 16px; border-radius: var(--r-sm); border: none; font-weight: 600; font-size: 0.9rem;"><i class="fas fa-check"></i> Requested</button>`
+                        :
+                        `<button class="action-btn" style="background: #4F46E5; color: var(--slate-900); padding: 8px 16px; border-radius: var(--r-sm); font-weight: 600; font-size: 0.9rem;" onclick="inviteWorkerFromMatch(${jobId}, ${w.id}, this)">
+                                    <i class="fas fa-paper-plane"></i> Request Worker
+                                </button>`
+                    }
+                        </div>
+                    </div>
+                </div > `;
+            }).join('');
+        }
+
         async function loadProfileData() {
             try {
                 const profile = await apiRequest('/profile');
-                document.getElementById('profileName').value = profile.name || '';
-                document.getElementById('profileEmail').value = profile.email || '';
-                document.getElementById('profilePhone').value = profile.phone || '';
-                document.getElementById('profileAddress').value = profile.address || '';
-            } catch (error) { console.error(error); }
-        }
-        document.getElementById('profileForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                await apiRequest('/profile', {
-                    method: 'PUT', body: JSON.stringify({
-                        name: document.getElementById('profileName').value,
-                        email: document.getElementById('profileEmail').value,
-                        phone: document.getElementById('profilePhone').value,
-                        address: document.getElementById('profileAddress').value
-                    })
-                });
-                showAlert('Profile updated successfully', 'success');
-            } catch (error) { showAlert(error.message, 'error'); }
-        });
+                if (document.getElementById('profileName')) document.getElementById('profileName').value = profile.name || '';
+                if (document.getElementById('profileEmail')) document.getElementById('profileEmail').value = profile.email || '';
+                if (document.getElementById('profilePhone')) document.getElementById('profilePhone').value = profile.phone || '';
+                if (document.getElementById('profileAddress')) document.getElementById('profileAddress').value = profile.address || '';
 
-        // --- Workers ---
-        async function loadWorkers() {
-            resetViews();
-            document.getElementById('workersSection').style.display = 'block';
-            document.getElementById('nav-workers').classList.add('active');
-            try {
-                const workers = await apiRequest('/workers');
-                const list = document.getElementById('workersList');
-                if (workers.length === 0) { list.innerHTML = '<p>No workers found.</p>'; return; }
+                if (document.getElementById('headerUserName') && profile.name) {
+                    document.getElementById('headerUserName').textContent = profile.name;
+                }
 
-                list.innerHTML = workers.map(w => `
-                    <div style="background:white; padding:20px; border-radius:10px; border-top:4px solid #10B981; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-                        <div style="display:flex; justify-content:space-between; align-items:start;">
-                            <h3 style="margin:0 0 5px 0; color:#1F2937;">${w.name}</h3>
-                            ${w.is_new ? '<span style="background:#10B981; color:white; padding:2px 8px; border-radius:10px; font-size:0.7rem;">NEW</span>' : ''}
-                        </div>
-                        <p style="color:#6B7280; margin:5px 0; font-size:0.9rem;"><i class="fas fa-briefcase"></i> ${w.position || 'Worker'}</p>
-                        <p style="color:#6B7280; margin:5px 0; font-size:0.9rem;"><i class="fas fa-star" style="color:#F59E0B"></i> ${(parseFloat(w.avg_rating) || 0).toFixed(1)} / 5</p>
-                        <p style="color:#6B7280; margin:5px 0; font-size:0.9rem;"><i class="fas fa-map-marker-alt"></i> ${w.address || 'N/A'}</p>
-                    </div>`).join('');
-            } catch (e) { console.error(e); }
-        }
-
-        // --- Notifications ---
-        async function loadNotifications() {
-            resetViews();
-            document.getElementById('notificationsSection').style.display = 'block';
-            document.getElementById('nav-notifications').classList.add('active');
-            try {
-                const notes = await apiRequest('/notifications');
-                const list = document.getElementById('notificationsList');
-                if (notes.length === 0) { list.innerHTML = '<p style="text-align:center; color:#666;">No notifications.</p>'; return; }
-                list.innerHTML = notes.map(n => `
-                    <div style="padding:15px; border-bottom:1px solid #eee; background:${n.is_read ? 'white' : '#F0F9FF'}; display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <div style="font-weight:600; margin-bottom:5px; color:#1F2937;">${n.title}</div>
-                            <div style="color:#4B5563; font-size:0.9rem;">${n.message}</div>
-                            <div style="color:#9CA3AF; font-size:0.75rem; margin-top:5px;">${formatDate(n.created_at)}</div>
-                        </div>
-                        ${!n.is_read ? `<i class="fas fa-circle" style="color:#3B82F6; font-size:0.6rem;"></i>` : ''}
-                    </div>
-                `).join('');
+                if (profile.profile_picture) {
+                    const picUrl = 'http://localhost:5000' + profile.profile_picture;
+                    if (document.getElementById('headerProfilePic')) {
+                        document.getElementById('headerProfilePic').src = picUrl;
+                        document.getElementById('headerProfilePic').style.display = 'block';
+                        document.getElementById('headerProfileIcon').style.display = 'none';
+                    }
+                    if (document.getElementById('profilePicPreview')) {
+                        document.getElementById('profilePicPreview').src = picUrl;
+                    }
+                }
             } catch (e) { }
+        }
+
+        async function uploadProfilePicture(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('profile_picture', file);
+
+            try {
+                showAlert('Uploading picture...', 'info');
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/profile/upload_picture', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Upload failed');
+
+                showAlert('Profile picture updated!', 'success');
+                loadProfileData(); // reload UI
+            } catch (err) {
+                showAlert(err.message, 'error');
+            }
         }
 
         async function checkNotifications() {
             try {
                 const res = await apiRequest('/notifications/unread');
-                const badge = document.getElementById('notificationCount');
-                badge.textContent = res.unread_count || 0;
-                badge.style.display = (res.unread_count > 0) ? 'inline-block' : 'none';
+                if (document.getElementById('notificationCount')) {
+                    document.getElementById('notificationCount').textContent = res.unread_count || 0;
+                    document.getElementById('notificationCount').style.display = (res.unread_count > 0) ? 'inline-block' : 'none';
+                }
             } catch (e) { }
         }
 
         async function markAllAsRead() {
-            try {
-                await apiRequest('/notifications/read-all', { method: 'PUT' });
-                checkNotifications();
-                loadNotifications();
-            } catch (e) { }
+            try { await apiRequest('/notifications/read-all', { method: 'PUT' }); checkNotifications(); loadNotifications(); } catch (e) { }
         }
 
-        // --- Modals & Actions ---
         function showCreateJobModal() { document.getElementById('createJobModal').style.display = 'flex'; }
-        function closeCreateJobModal() {
-            document.getElementById('createJobModal').style.display = 'none';
-            document.getElementById('createJobForm').reset();
-        }
+        function closeCreateJobModal() { document.getElementById('createJobModal').style.display = 'none'; }
+        // --- Worker Payment Flow ---
+        function openCompletionPaymentModal(jobId, salary) {
+            if (document.getElementById('completionPaymentModal')) document.getElementById('completionPaymentModal').remove();
 
-        document.getElementById('createJobForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try {
-                await apiRequest('/jobs', {
-                    method: 'POST', body: JSON.stringify({
-                        title: document.getElementById('jobTitle').value,
-                        description: document.getElementById('jobDescription').value,
-                        location: document.getElementById('jobLocation').value,
-                        salary: document.getElementById('jobSalary').value,
-                        duration: document.getElementById('jobDuration').value,
-                        required_experience: document.getElementById('jobExperience').value
-                    })
-                });
-                showAlert('Job created successfully!', 'success');
-                closeCreateJobModal();
-                loadMyJobs();
-            } catch (e) { showAlert(e.message, 'error'); }
-        });
+            const modalHtml = `
+                <div id="completionPaymentModal" class="modal-overlay" style="display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:3000; justify-content:center; align-items:center;">
+                    <div class="modal-content" style="background:white; width:90%; max-width:500px; padding:25px; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+                        <h2 style="margin-top:0; color:#1F2937; margin-bottom:10px;"><i class="fas fa-handshake" style="color:#10B981;"></i> Pay Worker & Complete</h2>
+                        <p style="color:#6B7280; font-size:0.95rem; margin-bottom:20px;">Please pay the worker's salary to mark this job as completed.</p>
+                        
+                        <div style="background:#F3F4F6; padding:15px; border-radius:8px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#4B5563; font-weight:600;">Salary Amount:</span>
+                            <span style="font-size:1.2rem; font-weight:bold; color:#111827;">${typeof formatCurrency === 'function' ? formatCurrency(salary) : salary}</span>
+                        </div>
 
-        // Review Modal Logic
-        async function openRateModal(jobId) {
-            try {
-                const job = await apiRequest(`/jobs/${jobId}`);
-                const acceptedApp = job.applications ? job.applications.find(app => app.status === 'accepted') : null;
-                if (!acceptedApp) { showAlert('Error: No accepted worker found.', 'error'); return; }
-
-                document.getElementById('reviewJobId').value = jobId;
-                document.getElementById('reviewWorkerId').value = acceptedApp.worker_id;
-                document.getElementById('reviewWorkerName').textContent = `Rate experience with ${acceptedApp.worker_name}`;
-                document.getElementById('ratingValue').value = '';
-                document.getElementById('reviewComment').value = '';
-                document.querySelectorAll('.star-btn').forEach(s => s.classList.remove('active'));
-                document.getElementById('reviewModal').style.display = 'flex';
-            } catch (error) { showAlert(error.message, 'error'); }
-        }
-
-        document.querySelectorAll('.star-btn').forEach(star => {
-            star.addEventListener('click', function () {
-                const value = this.dataset.value;
-                document.getElementById('ratingValue').value = value;
-                document.querySelectorAll('.star-btn').forEach(s => {
-                    s.classList.toggle('active', s.dataset.value <= value);
-                });
-            });
-        });
-
-        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const rating = document.getElementById('ratingValue').value;
-            if (!rating) { showAlert('Select a rating.', 'error'); return; }
-            try {
-                await apiRequest('/reviews', {
-                    method: 'POST', body: JSON.stringify({
-                        job_id: document.getElementById('reviewJobId').value,
-                        worker_id: document.getElementById('reviewWorkerId').value,
-                        rating: parseInt(rating),
-                        comment: document.getElementById('reviewComment').value
-                    })
-                });
-                showAlert('Review submitted!', 'success');
-                document.getElementById('reviewModal').style.display = 'none';
-                loadMyJobs();
-            } catch (error) { showAlert(error.message, 'error'); }
-        });
-
-        function closeReviewModal() { document.getElementById('reviewModal').style.display = 'none'; }
-
-        // --- Other Actions ---
-        async function completeJob(jobId) {
-            if (confirm('Mark as completed?')) {
-                try { await apiRequest(`/jobs/${jobId}/complete`, { method: 'PUT' }); showAlert('Job completed', 'success'); loadMyJobs(); }
-                catch (e) { showAlert(e.message, 'error'); }
-            }
-        }
-
-        async function processDirectPayment(jobId, amount) {
-            if (confirm(`Pay LKR ${amount} for this job?`)) {
-                try {
-                    await apiRequest('/payments', { method: 'POST', body: JSON.stringify({ job_id: jobId, amount: amount, payment_method: 'card' }) });
-                    showAlert('Payment successful! Pending approval.', 'success'); loadMyJobs();
-                }
-                catch (e) { showAlert(e.message, 'error'); }
-            }
-        }
-
-        // --- View Applications (Modal) ---
-        async function viewApplications(jobId) {
-            try {
-                const job = await apiRequest(`/jobs/${jobId}`);
-                const apps = job.applications || [];
-                const modalHtml = `
-                    <div class="modal-overlay" style="display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center;">
-                        <div class="modal-content" style="background:white; width:90%; max-width:600px; max-height:80vh; border-radius:10px; display:flex; flex-direction:column; overflow:hidden;">
-                            <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; background:#F9FAFB;">
-                                <h3 style="margin:0; font-size:1.1rem; color:#1F2937;">Applications: ${job.title}</h3>
-                                <button onclick="this.closest('.modal-overlay').remove()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-                            </div>
-                            <div style="padding:20px; overflow-y:auto;">
-                                ${apps.length === 0 ? '<p style="text-align:center; color:#666;">No applications yet.</p>' : apps.map(app => `
-                                    <div style="background:white; padding:15px; margin-bottom:10px; border-radius:8px; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,0.05);">
-                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                            <div>
-                                                <h4 style="margin:0; color:#1F2937;">${app.worker_name}</h4>
-                                                <small style="color:#6B7280;">${app.experience} yrs exp • ${app.position}</small>
-                                            </div>
-                                            <span style="padding:2px 8px; border-radius:10px; font-size:0.75rem; background:${app.status === 'accepted' ? '#D1FAE5' : '#FEF3C7'}; color:${app.status === 'accepted' ? '#065F46' : '#D97706'}">${app.status}</span>
-                                        </div>
-                                        <div style="display:flex; gap:10px;">
-                                            ${app.status === 'pending' ? `
-                                                <button class="action-btn btn-match" onclick="updateAppStatus(${jobId}, ${app.id}, 'accepted')">Accept</button>
-                                                <button class="action-btn" style="background:#FEE2E2; color:#991B1B;" onclick="updateAppStatus(${jobId}, ${app.id}, 'rejected')">Reject</button>
-                                            ` : ''}
-                                            ${app.status === 'accepted' ? `
-                                                <button class="action-btn btn-view" onclick="openMessages(${jobId}, ${app.worker_id}, '${app.worker_name}')"><i class="fas fa-comment"></i> Chat</button>
-                                            ` : ''}
-                                        </div>
-                                    </div>
-                                `).join('')}
+                        <div style="margin-bottom:20px;">
+                            <label style="display:block; font-weight:600; color:#374151; margin-bottom:10px;">Select Payment Method</label>
+                            
+                            <div style="display:flex; gap:15px;">
+                                <label style="flex:1; border:1px solid #D1D5DB; border-radius:8px; padding:15px; cursor:pointer; display:flex; align-items:center; gap:10px; transition:0.2s;" onmouseover="this.style.borderColor='#4F46E5'" onmouseout="this.style.borderColor='#D1D5DB'">
+                                    <input type="radio" name="payment_method" value="cash" checked onchange="document.getElementById('cardDetailsContainer').style.display='none'">
+                                    <span><i class="fas fa-money-bill-wave" style="color:#10B981;"></i> Cash / Bank Transfer</span>
+                                </label>
+                                
+                                <label style="flex:1; border:1px solid #D1D5DB; border-radius:8px; padding:15px; cursor:pointer; display:flex; align-items:center; gap:10px; transition:0.2s;" onmouseover="this.style.borderColor='#4F46E5'" onmouseout="this.style.borderColor='#D1D5DB'">
+                                    <input type="radio" name="payment_method" value="card" onchange="document.getElementById('cardDetailsContainer').style.display='block'">
+                                    <span><i class="fas fa-credit-card" style="color:#4F46E5;"></i> Pay via Card</span>
+                                </label>
                             </div>
                         </div>
-                    </div>`;
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-            } catch (error) { showAlert(error.message, 'error'); }
+
+                        <div id="cardDetailsContainer" style="display:none; background:#F9FAFB; padding:15px; border-radius:8px; border:1px solid #E5E7EB; margin-bottom:20px;">
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:0.85rem; color:#6B7280;">Card Number</label>
+                                <input type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19" 
+                                       oninput="let v = this.value.replace(/\\D/g, ''); this.value = v.replace(/(.{4})/g, '$1 ').trim();" 
+                                       style="width:100%; padding:8px; border:1px solid #D1D5DB; border-radius:6px; box-sizing:border-box;">
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <div class="form-group" style="flex:1;">
+                                    <label style="font-size:0.85rem; color:#6B7280;">Expiry (MM/YY)</label>
+                                    <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" 
+                                           oninput="let v = this.value.replace(/\\D/g, ''); if(v.length > 2) { this.value = v.substring(0,2) + '/' + v.substring(2); } else { this.value = v; }" 
+                                           style="width:100%; padding:8px; border:1px solid #D1D5DB; border-radius:6px; box-sizing:border-box;">
+                                </div>
+                                <div class="form-group" style="flex:1;">
+                                    <label style="font-size:0.85rem; color:#6B7280;">CVV</label>
+                                    <input type="password" class="form-control" placeholder="123" maxlength="4" style="width:100%; padding:8px; border:1px solid #D1D5DB; border-radius:6px; box-sizing:border-box;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+                            <button onclick="document.getElementById('completionPaymentModal').remove()" style="padding:10px 15px; border:none; background:#F3F4F6; color:#4B5563; border-radius:6px; cursor:pointer; font-weight:600;">Cancel</button>
+                            <button onclick="confirmPayment(${jobId})" style="padding:10px 15px; border:none; background:#10B981; color:white; border-radius:6px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px;"><i class="fas fa-check-circle"></i> Confirm Payment</button>
+                        </div>
+                    </div>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
 
-        async function updateAppStatus(jobId, appId, status) {
-            try {
-                await apiRequest(`/jobs/${jobId}/applications/${appId}`, { method: 'PUT', body: JSON.stringify({ status }) });
-                showAlert(`Application ${status}`, 'success'); document.querySelector('.modal-overlay').remove(); viewApplications(jobId);
+        async function confirmPayment(jobId) {
+            const methodRadios = document.getElementsByName('payment_method');
+            let selectedMethod = 'cash';
+            for (let radio of methodRadios) {
+                if (radio.checked) { selectedMethod = radio.value; break; }
             }
-            catch (e) { showAlert(e.message, 'error'); }
+
+            try {
+                // Fixed URL Typo: removed space from '/ jobs /' -> '/jobs/'
+                await apiRequest(`/jobs/${jobId}/complete`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ payment_method: selectedMethod })
+                });
+                if (document.getElementById('completionPaymentModal')) document.getElementById('completionPaymentModal').remove();
+                showAlert('Payment verified! Job successfully completed.', 'success');
+                loadMyJobs();
+            } catch (e) {
+                showAlert(e.message, 'error');
+            }
         }
 
-        async function viewMatchedWorkers(jobId) {
-            try {
-                const workers = await apiRequest(`/jobs/${jobId}/match`);
-                const msg = workers.length ? workers.map(w => w.name).join(', ') : 'No matches found yet.';
-                alert('Best Matched Workers: ' + msg);
-            } catch (e) { showAlert(e.message, 'error'); }
+        const createJobForm = document.getElementById('createJobForm');
+        if (createJobForm) {
+            createJobForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    await apiRequest('/jobs', {
+                        method: 'POST', body: JSON.stringify({
+                            title: document.getElementById('jobTitle').value,
+                            description: document.getElementById('jobDescription').value,
+                            location: document.getElementById('jobLocation').value,
+                            required_skills: document.getElementById('jobRequiredSkills') ? document.getElementById('jobRequiredSkills').value : '',
+                            salary: document.getElementById('jobSalary').value,
+                            duration: document.getElementById('jobDuration').value,
+                            required_experience: document.getElementById('jobExperience').value
+                        })
+                    });
+                    showAlert('Approval requested successfully!', 'success');
+                    closeCreateJobModal();
+                    loadMyJobs();
+                } catch (e) { showAlert(e.message, 'error'); }
+            });
+        }
+
+        const profileForm = document.getElementById('profileForm');
+        if (profileForm) {
+            profileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    await apiRequest('/profile', { method: 'PUT', body: JSON.stringify({ name: document.getElementById('profileName').value, email: document.getElementById('profileEmail').value, phone: document.getElementById('profilePhone').value, address: document.getElementById('profileAddress').value }) });
+                    showAlert('Profile updated successfully', 'success');
+                } catch (error) { showAlert(error.message, 'error'); }
+            });
         }
 
         function logout() { removeAuthToken(); removeCurrentUser(); window.location.href = 'login.html'; }
     </script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,si,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

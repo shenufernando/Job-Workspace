@@ -14,6 +14,7 @@ def get_db():
                 user=Config.MYSQL_USER,
                 password=Config.MYSQL_PASSWORD,
                 database=Config.MYSQL_DATABASE,
+                port=3307,
                 autocommit=True
             )
         except Error as e:

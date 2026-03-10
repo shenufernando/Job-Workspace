@@ -127,3 +127,18 @@ VALUES ('Admin User', 'admin@jobworkspace.com', '1234567890', 'Admin Address', '
 USE job_workspace;
    SHOW TABLES;
    SELECT COUNT(*) FROM users;
+   
+ALTER TABLE job_applications MODIFY COLUMN status ENUM('pending', 'accepted', 'rejected', 'completed', 'invited') DEFAULT 'pending';
+
+ALTER TABLE messages 
+ADD COLUMN message_type ENUM('text', 'image', 'audio') DEFAULT 'text' AFTER message,
+ADD COLUMN file_url VARCHAR(255) NULL AFTER message_type;
+
+ALTER TABLE job_workspace.users 
+ADD COLUMN profile_picture VARCHAR(255) DEFAULT NULL;
+
+ALTER TABLE job_workspace.users 
+ADD COLUMN skills VARCHAR(500) DEFAULT NULL;
+
+ALTER TABLE job_workspace.job_posts 
+ADD COLUMN required_skills VARCHAR(500) DEFAULT NULL;

@@ -1,164 +1,168 @@
-from geopy.distance import geodesic
-import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.database import get_db
+import torch
+import pickle
+import numpy as np
+from math import radians, cos, sin, asin, sqrt
+from transformers import BertTokenizer, BertForSequenceClassification
+import torch.nn.functional as F
 
-def calculate_distance(loc1, loc2):
-    """Calculate distance between two locations (lat, lon)"""
+# --- Configuration ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, 'bert_job_model')
+LABEL_ENCODER_PATH = os.path.join(BASE_DIR, 'bert_label_encoder.pkl')
+
+# Global Variables
+model = None
+tokenizer = None
+label_encoder = None
+device = torch.device("cpu")
+
+# --- SRI LANKA CITIES COORDINATES DATABASE ---
+# අපි නිතර පාවිච්චි වන නගර වල Lat/Lon මෙතනම දාමු (API ඕනේ නෑ)
+CITY_COORDS = {
+    "colombo": (6.9271, 79.8612),
+    "gampaha": (7.0840, 79.9939),
+    "kandy": (7.2906, 80.6337),
+    "galle": (6.0535, 80.2210),
+    "matara": (5.9549, 80.5550),
+    "kurunegala": (7.4863, 80.3647),
+    "negombo": (7.2088, 79.8358),
+    "jaffna": (9.6615, 80.0255),
+    "anuradhapura": (8.3114, 80.4037),
+    "trincomalee": (8.5874, 81.2152),
+    "batticaloa": (7.7310, 81.6747),
+    "kalutara": (6.5854, 79.9607),
+    "panadura": (6.7106, 79.9074),
+    "nuwara eliya": (6.9497, 80.7891),
+    "badulla": (6.9934, 81.0550),
+    "ratnapura": (6.6939, 80.3983),
+    "kegalle": (7.2513, 80.3464),
+    "matale": (7.4727, 80.6218),
+    "hambantota": (6.1429, 81.1212),
+    "kottawa": (6.8412, 79.9654),
+    "maharagama": (6.8480, 79.9265),
+    "nugegoda": (6.8649, 79.8997),
+    "malabe": (6.9061, 79.9647),
+    "homagama": (6.8445, 80.0007),
+    "piliyandala": (6.8018, 79.9227),
+    "moratuwa": (6.7730, 79.8816),
+    "dehiwala": (6.8511, 79.8659),
+    "kelaniya": (6.9543, 79.9173),
+    "kadawatha": (7.0019, 79.9523)
+}
+
+def load_ai_models():
+    global model, tokenizer, label_encoder
+    print("⏳ Loading AI Models (BERT)...")
     try:
-        return geodesic(loc1, loc2).kilometers
-    except:
-        return float('inf')
+        with open(LABEL_ENCODER_PATH, 'rb') as f:
+            label_encoder = pickle.load(f)
+        tokenizer = BertTokenizer.from_pretrained(MODEL_DIR)
+        model = BertForSequenceClassification.from_pretrained(MODEL_DIR)
+        model.to(device)
+        model.eval()
+        print("✅ BERT Model Loaded Successfully!")
+        return True
+    except Exception as e:
+        print(f"❌ Error loading AI: {e}")
+        return False
 
-def get_location_coords(location):
-    """Convert location string to coordinates (simplified - in production use geocoding API)"""
-    # This is a placeholder - in production, use a geocoding service
-    # For now, return a default coordinate
-    return (6.9271, 79.8612)  # Default to Colombo, Sri Lanka
+# Function to calculate distance between two points (Haversine Formula)
+def calculate_distance_km(city1, city2):
+    c1 = CITY_COORDS.get(city1.lower().strip())
+    c2 = CITY_COORDS.get(city2.lower().strip())
+    
+    if not c1 or not c2:
+        return 999 # දුර හොයාගන්න බැරි නම් ලොකු අගයක් දෙනවා
 
-def match_workers_to_job(job_id):
-    """AI matching algorithm to suggest best workers for a job"""
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
+    lon1, lat1, lon2, lat2 = map(radians, [c1[1], c1[0], c2[1], c2[0]])
+
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    r = 6371 # Radius of earth in kilometers
+    return round(c * r, 1)
+
+load_ai_models()
+
+def get_ranked_workers(job_post, workers_list):
+    matched_workers = []
     
-    # Get job details
-    cursor.execute("""
-        SELECT id, provider_id, title, description, location, required_experience, salary
-        FROM job_posts WHERE id = %s AND status = 'approved'
-    """, (job_id,))
-    job = cursor.fetchone()
-    
-    if not job:
-        return []
-    
-    # Get all active workers
-    cursor.execute("""
-        SELECT u.id, u.name, u.position, u.experience, u.address,
-               AVG(r.rating) as avg_rating,
-               COUNT(r.id) as review_count
-        FROM users u
-        LEFT JOIN reviews r ON u.id = r.worker_id
-        WHERE u.role = 'worker'
-        GROUP BY u.id
-    """)
-    workers = cursor.fetchall()
-    
-    # Get job location coordinates
-    job_coords = get_location_coords(job['location'])
-    
-    # Score each worker
-    scored_workers = []
-    for worker in workers:
-        score = 0
+    for worker in workers_list:
+        # 1. Base Score Initialization (Give everyone a default baseline score of 50)
+        base_score = 50
         
-        # Experience match (0-40 points)
-        if worker['experience'] >= job['required_experience']:
-            score += 40
+        # Safe String Extractions mapping Job Title against Worker Position
+        w_pos = (worker.get('position') or '').lower().strip()
+        j_tit = (job_post.get('title') or '').lower().strip()
+        
+        # Fuzzy Substring Base Scoring (Case-insensitive matching words)
+        if w_pos and j_tit:
+            if w_pos in j_tit or j_tit in w_pos:
+                base_score = 100
+            else:
+                base_score = 30 # Unrelated positions drop to bottom
         else:
-            score += (worker['experience'] / max(job['required_experience'], 1)) * 40
+            base_score = 30
         
-        # Rating score (0-30 points)
-        avg_rating = worker['avg_rating'] or 0
-        score += (avg_rating / 5) * 30
+        # 2. Safe Skills Extraction for BERT
+        raw_req_skills = job_post.get('required_skills') or ''
+        job_skills = str(raw_req_skills).strip()
+        has_req_skills = bool(job_skills)
         
-        # Review count bonus (0-10 points)
-        review_count = worker['review_count'] or 0
-        score += min(review_count * 2, 10)
+        raw_w_skills = worker.get('skills') or ''
+        worker_skills = str(raw_w_skills).strip()
+        has_w_skills = bool(worker_skills)
         
-        # Location proximity (0-20 points)
-        worker_coords = get_location_coords(worker['address'])
-        distance = calculate_distance(job_coords, worker_coords)
-        if distance < 5:
-            score += 20
-        elif distance < 10:
-            score += 15
-        elif distance < 20:
-            score += 10
+        skill_score = 0
+        final_score = base_score
+        
+        # 3. BERT Skills Blending Logic inside a Safe Wrapper
+        if has_req_skills:
+            if has_w_skills:
+                try:
+                    inputs1 = tokenizer(job_skills, return_tensors="pt", truncation=True, padding=True, max_length=128).to(device)
+                    inputs2 = tokenizer(worker_skills, return_tensors="pt", truncation=True, padding=True, max_length=128).to(device)
+                    
+                    with torch.no_grad():
+                        emb1 = model.bert(**inputs1).last_hidden_state.mean(dim=1)
+                        emb2 = model.bert(**inputs2).last_hidden_state.mean(dim=1)
+                    
+                    cos_sim = F.cosine_similarity(emb1, emb2)[0].item()
+                    skill_score = max(0, cos_sim * 100)
+                    
+                    # Blend the scores explicitly using int() bounding (50% Position, 50% Skills)
+                    final_score = int((base_score * 0.5) + (skill_score * 0.5))
+                except Exception as e:
+                    print(f"Skills BERT Error: {e}", flush=True)
+                    final_score = base_score
+            else:
+                # Worker has no skills but job requires them, penalize severely (50% block)
+                final_score = int(base_score * 0.5)
         else:
-            score += max(0, 20 - distance / 5)
+            # Job didn't ask for any skills, fallback perfectly safely
+            final_score = base_score
+                
+        # 4. Critical UI Formatting and Payload Filtering
+        # Format the worker and map exactly what the frontend requires natively.
+        worker['final_match_percentage'] = final_score
+        worker['match_score'] = final_score
         
-        # Check if already applied
-        cursor.execute("""
-            SELECT id FROM job_applications 
-            WHERE job_id = %s AND worker_id = %s
-        """, (job_id, worker['id']))
-        already_applied = cursor.fetchone()
+        # (is_requested and distance_km are already handled inside backend/routes/jobs.py wrapper)
         
-        if not already_applied:
-            scored_workers.append({
-                'worker': worker,
-                'score': score,
-                'distance': distance
-            })
-    
-    # Sort by score (descending)
-    scored_workers.sort(key=lambda x: x['score'], reverse=True)
-    
-    # Return top 10 matches
-    cursor.close()
-    return [w['worker'] for w in scored_workers[:10]]
+        # ONLY APPEND WORKERS WHO PASS THE THRESHOLD
+        if final_score >= 50:
+            matched_workers.append(worker)
 
-def recommend_jobs_for_worker(worker_id):
-    """Recommend jobs for a worker based on their profile"""
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
+    # 5. Sort the list descending organically using the final score mapping keys
+    matched_workers.sort(key=lambda x: x.get('final_match_percentage', 0), reverse=True)
     
-    # Get worker details
-    cursor.execute("""
-        SELECT id, position, experience, address FROM users WHERE id = %s
-    """, (worker_id,))
-    worker = cursor.fetchone()
-    
-    if not worker:
-        return []
-    
-    # Get available jobs
-    cursor.execute("""
-        SELECT j.*, u.name as provider_name
-        FROM job_posts j
-        JOIN users u ON j.provider_id = u.id
-        WHERE j.status = 'approved'
-        AND j.id NOT IN (
-            SELECT job_id FROM job_applications WHERE worker_id = %s
-        )
-    """, (worker_id,))
-    jobs = cursor.fetchall()
-    
-    # Get worker location
-    worker_coords = get_location_coords(worker['address'])
-    
-    # Score each job
-    scored_jobs = []
-    for job in jobs:
-        score = 0
-        
-        # Experience match
-        if worker['experience'] >= job['required_experience']:
-            score += 50
-        
-        # Location proximity
-        job_coords = get_location_coords(job['location'])
-        distance = calculate_distance(worker_coords, job_coords)
-        if distance < 5:
-            score += 30
-        elif distance < 10:
-            score += 20
-        elif distance < 20:
-            score += 10
-        
-        # Salary consideration (higher salary = higher score)
-        if job['salary']:
-            score += min(job['salary'] / 1000, 20)
-        
-        scored_jobs.append({
-            'job': job,
-            'score': score,
-            'distance': distance
-        })
-    
-    # Sort by score
-    scored_jobs.sort(key=lambda x: x['score'], reverse=True)
-    cursor.close()
-    
-    return [j['job'] for j in scored_jobs[:10]]
+    # 6. Debug print verifying exactly how many objects matched successfully
+    print(f"DEBUG: Returning {len(matched_workers)} workers to frontend with match_percentage.", flush=True)
+
+    return matched_workers
+
+def basic_keyword_match(job_post, workers_list):
+    return []
